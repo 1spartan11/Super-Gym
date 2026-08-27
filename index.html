@@ -362,7 +362,6 @@
 </head>
 <body>
 
-<!-- NAVIGATION -->
 <nav class="topbar">
   <div class="topbar-wrap">
     <div class="header-left">
@@ -370,7 +369,6 @@
       <div class="logo">SUPER<span>GYM</span></div>
     </div>
     
-    <!-- NEW NAVIGATION TABS -->
     <div class="nav-links">
       <a href="#main-gym">Main Gym</a>
       <a href="#womens-gym">Women's Gym</a>
@@ -383,7 +381,6 @@
   </div>
 </nav>
 
-<!-- HERO SECTION -->
 <header class="hero">
   <video class="hero-video" autoplay loop muted playsinline>
     <source src="gym-video.mp4" type="video/mp4">
@@ -403,7 +400,6 @@
   </div>
 </header>
 
-<!-- SCHEDULE INFO -->
 <section class="info-band">
   <div class="schedule-card">
     <h3>The Grind Doesn't Stop</h3>
@@ -415,10 +411,8 @@
   </div>
 </section>
 
-<!-- GALLERIES -->
 <section class="gallery-wrapper">
   
-  <!-- MEN'S GALLERY -->
   <div class="gallery-block" id="main-gym">
     <h2 class="section-title">The Main Floor</h2>
     <p class="section-desc">Free weights, plate-loaded machines, and enough iron to keep you busy for years.</p>
@@ -432,7 +426,6 @@
 
 </section>
 
-<!-- MARQUEE DIVIDER -->
 <div class="marquee-band">
   <div class="marquee-content">
     <span>WORKING 24 HOURS   •   READY FOR YOUR GOALS   •   WITH BEST COACHES   •   WITH BEST MACHINES</span>
@@ -442,7 +435,6 @@
 
 <section class="gallery-wrapper" style="margin-top: 0;">
 
-  <!-- WOMEN'S GALLERY -->
   <div class="gallery-block" id="womens-gym">
     <h2 class="section-title">The Women's Gym</h2>
     <p class="section-desc">A dedicated training floor for our women members — cardio, strength machines, and a space built just for them.</p>
@@ -456,13 +448,11 @@
 
 </section>
 
-<!-- STANDALONE PAYMENT SECTION -->
 <section class="payment-section-standalone" id="payment-section">
   <h2 class="section-title">Payment Methods</h2>
   <p class="section-desc">Pay your membership instantly and start improving.</p>
   
   <div class="button-group">
-    <!-- BOTH PAYMENT BUTTONS TRIGGER THE ORGANIZED MODAL -->
     <button class="action-btn btn-instapay" onclick="openPaymentModal()">
       <span>InstaPay</span>
     </button>
@@ -472,7 +462,6 @@
   </div>
 </section>
 
-<!-- LOCATION SECTION -->
 <section class="location-section" id="location-section">
   <h2 class="section-title">Find Us</h2>
   <p class="section-desc">Come visit Super Gym and start your journey today.</p>
@@ -490,7 +479,6 @@
   </div>
 </section>
 
-<!-- REVIEWS -->
 <section class="reviews-area" id="reviews">
   <h2 class="section-title" style="font-size: 32px;">Iron Sharpens Iron</h2>
   <p class="section-desc" style="color: #999;">See what our community of champions has to say.</p>
@@ -521,7 +509,6 @@
   <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-reviews">⭐ Read More on Google</a>
 </section>
 
-<!-- ORGANIZED DUAL PAYMENT MODAL -->
 <div id="paymentModal" class="modal-overlay">
   <div class="payment-modal-card">
     <button class="modal-close" onclick="closePaymentModal()">✕</button>
@@ -529,7 +516,6 @@
     <h2>Choose Payment Method</h2>
 
     <div class="payment-grid">
-      <!-- InstaPay Card -->
       <div class="payment-method-box">
         <h3>InstaPay</h3>
         <p>Transfer to this number:</p>
@@ -538,10 +524,9 @@
           <button onclick="copyToClipboard('instaNumber', 'instaMessage')">Copy</button>
         </div>
         <p id="instaMessage" class="feedback-msg"></p>
-        <button class="launch-app-btn" onclick="launchApp('instapay://')">Open InstaPay</button>
+        <button class="launch-app-btn" onclick="launchApp('instapay')">Open InstaPay</button>
       </div>
 
-      <!-- Vodafone Cash Card -->
       <div class="payment-method-box">
         <h3>Vodafone Cash</h3>
         <p>Transfer to this number:</p>
@@ -550,22 +535,18 @@
           <button onclick="copyToClipboard('vodafoneNumber', 'vodafoneMessage')">Copy</button>
         </div>
         <p id="vodafoneMessage" class="feedback-msg"></p>
-        <button class="launch-app-btn" onclick="launchApp('vf-cash://')">Open Vodafone Cash</button>
+        <button class="launch-app-btn" onclick="launchApp('vodafone')">Open Vodafone Cash</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- =========================================
-     JAVASCRIPT LOGIC
-     ========================================= -->
 <script>
   /* --- 1. MODAL & PAYMENT CONTROLS --- */
   const modal = document.getElementById('paymentModal');
 
   function openPaymentModal() {
     modal.style.display = 'flex';
-    // Reset feedback messages
     document.getElementById("instaMessage").innerText = "";
     document.getElementById("vodafoneMessage").innerText = "";
   }
@@ -574,14 +555,12 @@
     modal.style.display = 'none';
   }
 
-  // Close modal when clicking on the dark background overlay
   window.onclick = function(event) {
     if (event.target === modal) {
       closePaymentModal();
     }
   };
 
-  // Modern Clipboard API approach
   function copyToClipboard(inputId, msgId) {
     const copyText = document.getElementById(inputId).value;
     navigator.clipboard.writeText(copyText)
@@ -594,8 +573,27 @@
       });
   }
 
-  function launchApp(urlScheme) {
-    window.location.href = urlScheme;
+  /* --- FIXED: DEVICE DETECTION FOR APP LAUNCHING --- */
+  function launchApp(appType) {
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    
+    if (appType === 'instapay') {
+      if (isAndroid) {
+        // Safe Android intent for InstaPay
+        window.location.href = 'intent://#Intent;package=com.egyptianbanks.instapay;scheme=https;end';
+      } else {
+        // iOS or Desktop fallback
+        window.location.href = 'instapay://';
+      }
+    } else if (appType === 'vodafone') {
+      if (isAndroid) {
+        // Safe Android intent for Vodafone Cash (*9*7#)
+        window.location.href = 'intent://#Intent;package=com.emeint.android.myservices;scheme=https;S.browser_fallback_url=' + encodeURIComponent('tel:*9*7%23') + ';end';
+      } else {
+        // iOS fallback
+        window.location.href = 'tel:*9*7%23';
+      }
+    }
   }
 
   /* --- 2. GALLERY DATA --- */
@@ -628,10 +626,8 @@
     const mainImg = document.getElementById(`${type}MainImg`);
     const photos = galleries[type].photos;
 
-    // Set Initial Image
     mainImg.src = photos[0];
 
-    // Create Thumbnails
     photos.forEach((photo, idx) => {
       const img = document.createElement('img');
       img.src = photo;
@@ -657,20 +653,17 @@
     const mainImg = document.getElementById(`${type}MainImg`);
     const thumbs = document.getElementById(`${type}Thumbs`).querySelectorAll('.thumb');
     
-    // Smooth Fade Transition
     mainImg.style.opacity = 0.5;
     setTimeout(() => {
       mainImg.src = galleries[type].photos[newIndex];
       mainImg.style.opacity = 1;
     }, 150);
 
-    // Update Active Thumbnail State
     thumbs.forEach((t, i) => {
       t.classList.toggle('active', i === newIndex);
     });
   }
 
-  // Initialize both galleries when page loads
   window.addEventListener('DOMContentLoaded', () => {
     initGallery('men');
     initGallery('women');
