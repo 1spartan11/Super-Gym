@@ -36,7 +36,7 @@
   }
 
   /* Smooth scroll offset for sticky header */
-  #main-gym, #womens-gym, #payment-section, #reviews {
+  #main-gym, #womens-gym, #payment-section, #location-section, #reviews {
     scroll-margin-top: 100px; 
   }
 
@@ -52,7 +52,7 @@
   .topbar-wrap {
     display: flex; align-items: center; justify-content: space-between; 
     padding: 12px 20px; max-width: 1200px; margin: 0 auto;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    flex-wrap: wrap; 
     gap: 15px;
   }
   .header-left { display: flex; align-items: center; gap: 12px; }
@@ -146,7 +146,6 @@
   }
   .action-btn span { position: relative; z-index: 2; text-shadow: 1px 1px 4px #000; }
   
-  /* Background images for specific buttons */
   .btn-instapay { background: url('images.jpg') center/cover; }
   .btn-vodafone { background: url('da825f86efb52423c2785be6a2dd9124.jpg') center/cover; }
   
@@ -283,7 +282,45 @@
   }
 
   /* =========================================
-     8. REVIEWS SECTION
+     8. LOCATION SECTION
+     ========================================= */
+  .location-section {
+    background: #0a0a0a;
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 3px solid var(--color-red);
+  }
+  .map-box {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--color-bg-card);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border-bottom: 4px solid var(--color-red);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+  .map-iframe-container {
+    width: 100%;
+    height: 350px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 2px solid #333;
+  }
+  .map-iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  .btn-map-large {
+    display: inline-block; background: var(--color-red); color: #fff; padding: 12px 30px;
+    text-decoration: none; font-weight: 900; font-size: 15px; border-radius: var(--radius-pill);
+    transition: all 0.3s; text-transform: uppercase;
+  }
+  .btn-map-large:hover { background: var(--color-red-dark); transform: scale(1.05); }
+
+  /* =========================================
+     9. REVIEWS SECTION
      ========================================= */
   .reviews-area { background: #000; padding: 70px 20px; text-align: center; border-top: 3px solid var(--color-red); }
   .reviews-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1100px; margin: 35px auto; }
@@ -306,7 +343,7 @@
   .btn-reviews:hover { background: var(--color-red-dark); transform: scale(1.05); }
 
   /* =========================================
-     9. RESPONSIVE QUERIES
+     10. RESPONSIVE QUERIES
      ========================================= */
   @media (max-width: 860px) {
     .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; padding-top: 10px;}
@@ -319,11 +356,13 @@
     .thumb { width: 75px; height: 55px; }
     .marquee-content { font-size: 16px; }
     .payment-modal-card { padding: 20px; }
+    .map-iframe-container { height: 250px; }
   }
 </style>
 </head>
 <body>
 
+<!-- NAVIGATION -->
 <nav class="topbar">
   <div class="topbar-wrap">
     <div class="header-left">
@@ -331,10 +370,12 @@
       <div class="logo">SUPER<span>GYM</span></div>
     </div>
     
+    <!-- NEW NAVIGATION TABS -->
     <div class="nav-links">
       <a href="#main-gym">Main Gym</a>
       <a href="#womens-gym">Women's Gym</a>
       <a href="#payment-section">Payment Methods</a>
+      <a href="#location-section">Find Us</a>
       <a href="#reviews">Reviews</a>
     </div>
 
@@ -342,6 +383,7 @@
   </div>
 </nav>
 
+<!-- HERO SECTION -->
 <header class="hero">
   <video class="hero-video" autoplay loop muted playsinline>
     <source src="gym-video.mp4" type="video/mp4">
@@ -361,6 +403,7 @@
   </div>
 </header>
 
+<!-- SCHEDULE INFO -->
 <section class="info-band">
   <div class="schedule-card">
     <h3>The Grind Doesn't Stop</h3>
@@ -372,8 +415,10 @@
   </div>
 </section>
 
+<!-- GALLERIES -->
 <section class="gallery-wrapper">
   
+  <!-- MEN'S GALLERY -->
   <div class="gallery-block" id="main-gym">
     <h2 class="section-title">The Main Floor</h2>
     <p class="section-desc">Free weights, plate-loaded machines, and enough iron to keep you busy for years.</p>
@@ -387,6 +432,7 @@
 
 </section>
 
+<!-- MARQUEE DIVIDER -->
 <div class="marquee-band">
   <div class="marquee-content">
     <span>WORKING 24 HOURS   •   READY FOR YOUR GOALS   •   WITH BEST COACHES   •   WITH BEST MACHINES</span>
@@ -396,6 +442,7 @@
 
 <section class="gallery-wrapper" style="margin-top: 0;">
 
+  <!-- WOMEN'S GALLERY -->
   <div class="gallery-block" id="womens-gym">
     <h2 class="section-title">The Women's Gym</h2>
     <p class="section-desc">A dedicated training floor for our women members — cardio, strength machines, and a space built just for them.</p>
@@ -409,23 +456,41 @@
 
 </section>
 
+<!-- STANDALONE PAYMENT SECTION -->
 <section class="payment-section-standalone" id="payment-section">
   <h2 class="section-title">Payment Methods</h2>
   <p class="section-desc">Pay your membership instantly and start improving.</p>
   
   <div class="button-group">
+    <!-- BOTH PAYMENT BUTTONS TRIGGER THE ORGANIZED MODAL -->
     <button class="action-btn btn-instapay" onclick="openPaymentModal()">
       <span>InstaPay</span>
     </button>
     <button class="action-btn btn-vodafone" onclick="openPaymentModal()">
       <span>Vodafone Cash</span>
     </button>
-    <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="action-btn btn-map">
-      <span>📍 Open Google Maps</span>
+  </div>
+</section>
+
+<!-- LOCATION SECTION -->
+<section class="location-section" id="location-section">
+  <h2 class="section-title">Find Us</h2>
+  <p class="section-desc">Come visit Super Gym and start your journey today.</p>
+  
+  <div class="map-box">
+    <div class="map-iframe-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.355325754406!2d30.00405337537667!3d31.250688474338426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5dbc333322b85%3A0x9a50357b93f536cc!2ssuper%20gym!5e0!3m2!1sen!2seg!4v1700000000000!5m2!1sen!2seg" 
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="btn-map-large">
+      📍 Open in Google Maps
     </a>
   </div>
 </section>
 
+<!-- REVIEWS -->
 <section class="reviews-area" id="reviews">
   <h2 class="section-title" style="font-size: 32px;">Iron Sharpens Iron</h2>
   <p class="section-desc" style="color: #999;">See what our community of champions has to say.</p>
@@ -456,6 +521,7 @@
   <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-reviews">⭐ Read More on Google</a>
 </section>
 
+<!-- ORGANIZED DUAL PAYMENT MODAL -->
 <div id="paymentModal" class="modal-overlay">
   <div class="payment-modal-card">
     <button class="modal-close" onclick="closePaymentModal()">✕</button>
@@ -463,6 +529,7 @@
     <h2>Choose Payment Method</h2>
 
     <div class="payment-grid">
+      <!-- InstaPay Card -->
       <div class="payment-method-box">
         <h3>InstaPay</h3>
         <p>Transfer to this number:</p>
@@ -474,6 +541,7 @@
         <button class="launch-app-btn" onclick="launchApp('instapay://')">Open InstaPay</button>
       </div>
 
+      <!-- Vodafone Cash Card -->
       <div class="payment-method-box">
         <h3>Vodafone Cash</h3>
         <p>Transfer to this number:</p>
@@ -488,6 +556,9 @@
   </div>
 </div>
 
+<!-- =========================================
+     JAVASCRIPT LOGIC
+     ========================================= -->
 <script>
   /* --- 1. MODAL & PAYMENT CONTROLS --- */
   const modal = document.getElementById('paymentModal');
