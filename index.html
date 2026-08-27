@@ -7,347 +7,342 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --red:#E2231A;
-    --red-dark:#A8140D;
-    --ink:#131110;
-    --white:#FFFFFF;
-    --radius: 2px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink);
-    color:var(--white);
-    font-family:'Work Sans', sans-serif;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-    font-size: 14px;
-  }
-
-  /* ===== top bar ===== */
-  .topbar{
-    position:sticky; top:0; z-index:40;
-    background:#000000;
-    border-bottom:3px solid var(--red);
-  }
-  .topbar .wrap{display:flex; align-items:center; justify-content:space-between; padding:10px 20px;}
-  .header-left { display: flex; align-items: center; gap: 10px; }
-  .logo{font-family:'Anton'; font-size:24px; letter-spacing:1px; color:var(--white); display: flex; align-items: center;}
-  .logo span{color:var(--red);}
-  .nav-logo-img{height:50px; width:50px; border-radius:50%; object-fit:cover; margin-right:10px; border: 2px solid #fff; box-shadow:0 0 8px rgba(226,35,26,0.5);}
-  
-  .top-cta{
-    display:flex; align-items:center; gap:10px;
-    background:var(--red); color:var(--white); font-weight:900;
-    padding:8px 18px; border-radius:20px; font-size:14px;
-    text-transform: uppercase; text-decoration: none;
-    box-shadow:0 3px 8px rgba(226,35,26,0.4); transition:transform 0.2s, background 0.2s;
-  }
-  .top-cta:hover{background:var(--red-dark); transform:translateY(-2px);}
-
-  /* ===== hero (video background) ===== */
-  .hero{
-    position:relative;
-    min-height:85vh;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    padding:110px 20px 50px 20px;
-    overflow:hidden;
-    text-align: center;
-  }
-  .hero-video{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    object-fit:cover; z-index:0;
-  }
-  .hero-overlay{
-    position:absolute; inset:0; z-index:1;
-    background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.85) 100%);
-  }
-  
-  .hero-content{
-    position:relative; z-index:2; color:var(--white); width:100%; max-width:900px; text-align:center;
-    margin-top: 20px;
-    display: flex; flex-direction: column; align-items: center;
-  }
-  .hero-logo-img{
-    height: 90px; width: 90px; 
-    border-radius: 50%; object-fit: cover; 
-    margin-bottom: 12px; 
-    border: 3px solid #fff; 
-    box-shadow: 0 0 15px rgba(226,35,26,0.7);
-  }
-  .hero-main-title{
-    font-family:'Anton', sans-serif; 
-    font-size: clamp(38px, 7vw, 76px); 
-    color:var(--white);
-    letter-spacing:3px; 
-    text-shadow:3px 3px 12px rgba(0,0,0,0.9);
-    margin-bottom:8px; 
-    text-transform:uppercase;
-  }
-  .hero-main-title span{
-    color:var(--red);
-  }
-  .hero-subtitle{
-    font-family:'Work Sans', sans-serif; 
-    font-size: clamp(16px, 2.5vw, 22px); 
-    font-weight:600; 
-    color:#e0e0e0; 
-    margin-bottom: 25px; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-  }
-  .hero-red-heading{
-    font-family:'Anton', sans-serif; 
-    font-size: clamp(22px, 4vw, 38px); 
-    color:var(--red);
-    letter-spacing:1px; 
-    text-shadow:2px 2px 8px rgba(0,0,0,0.9);
-    margin-bottom:20px; 
-    text-transform:uppercase;
-  }
-  .hero-features{
-    margin-top: 15px;
-  }
-  .hero-features p{
-    font-family:'Work Sans', sans-serif; font-size:16px; font-weight:700;
-    letter-spacing:1px; margin:8px 0; color:#e0e0e0; text-transform:uppercase;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+  /* =========================================
+     1. CSS VARIABLES & GLOBAL STYLES
+     ========================================= */
+  :root {
+    --color-red: #E2231A;
+    --color-red-dark: #A8140D;
+    --color-bg-main: #131110;
+    --color-bg-card: #1a1a1a;
+    --color-text-main: #FFFFFF;
+    --color-text-muted: #cccccc;
+    --font-heading: 'Anton', sans-serif;
+    --font-body: 'Work Sans', sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-pill: 25px;
   }
 
-  /* ===== SIDE-BY-SIDE BUTTONS SECTION ===== */
-  .hero-actions{
-    position:relative; z-index:2; margin-top:40px;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    width:100%;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    font-size: 15px;
   }
-  .payment-title{
-    font-family:'Work Sans', sans-serif;
-    font-size:15px;
-    font-weight:800;
-    color:var(--white);
-    text-transform:uppercase;
-    letter-spacing:1px;
-    text-shadow:1px 1px 5px rgba(0,0,0,0.9);
-    margin-bottom:12px;
-  }
-  .action-buttons-row{
-    display:flex; flex-direction:row; justify-content:center; align-items:center;
-    gap:12px; flex-wrap:wrap; width:100%;
-  }
-  .pay-btn{
-    position:relative; width:auto; height:38px; padding:0 18px;
-    border:2px solid transparent; border-radius:20px;
-    color:var(--white); font-size:13px; font-weight:900; font-family:'Work Sans', sans-serif; text-transform:uppercase;
-    cursor:pointer; overflow:hidden; background-size:cover; background-position:center;
-    transition:transform 0.2s, border-color 0.2s;
-    display:inline-flex; align-items:center; justify-content:center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  }
-  
-  .btn-instapay{background-image:url('images.jpg'); direction: rtl;}
-  .btn-vodafone{background-image:url('da825f86efb52423c2785be6a2dd9124.jpg');}
-  
-  .pay-btn::before{
-    content:''; position:absolute; inset:0; background:rgba(0,0,0,0.65); z-index:1; transition:background 0.3s;
-  }
-  .pay-btn:hover::before{background:rgba(0,0,0,0.4);}
-  .pay-btn:hover{transform:scale(1.05); border-color:var(--red);}
-  .pay-btn span{position:relative; z-index:2; text-shadow:1px 1px 3px #000;}
 
-  .map-btn{
-    display:inline-flex; align-items:center; justify-content:center;
-    height:38px; padding:0 18px;
-    background:var(--white); color:#000;
-    font-weight:900; font-family:'Work Sans', sans-serif; font-size:12px; text-transform:uppercase; text-decoration:none;
-    border-radius:20px; transition:all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  /* Smooth scroll offset for sticky header */
+  #main-gym, #womens-gym, #payment-section, #reviews {
+    scroll-margin-top: 100px; 
   }
-  .map-btn:hover{background:var(--red); color:var(--white); transform:scale(1.05);}
 
-  /* ===== MODAL POPUP STYLES ===== */
-  .modal-overlay {
-    position: fixed; inset: 0;
+  /* =========================================
+     2. NAVIGATION BAR
+     ========================================= */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    backdrop-filter: blur(8px);
+    border-bottom: 3px solid var(--color-red);
   }
-  .payment-box {
-    background: #1a1a1a;
-    border: 2px solid var(--red);
-    border-radius: 10px;
-    padding: 30px 25px;
-    max-width: 420px; width: 100%;
-    box-shadow: 0 10px 30px rgba(226,35,26,0.3);
-    position: relative;
-    text-align: right;
-    direction: rtl;
-    color: var(--white);
+  .topbar-wrap {
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 12px 20px; max-width: 1200px; margin: 0 auto;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 15px;
   }
-  .modal-close {
-    position: absolute; top: 12px; left: 15px;
-    background: none; border: none;
-    color: #888; font-size: 24px; cursor: pointer;
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-family: var(--font-heading); font-size: 26px; letter-spacing: 1px; }
+  .logo span { color: var(--color-red); }
+  .nav-logo-img {
+    height: 45px; width: 45px; border-radius: 50%; object-fit: cover; 
+    border: 2px solid #fff; box-shadow: 0 0 8px rgba(226,35,26,0.5);
+  }
+  
+  /* Navigation Tabs */
+  .nav-links {
+    display: flex; gap: 20px; align-items: center;
+  }
+  .nav-links a {
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: color 0.2s;
   }
-  .modal-close:hover { color: var(--red); }
-  
-  .payment-box h2 {
-    color: var(--white); font-family: 'Anton', sans-serif, 'Work Sans'; 
-    margin-bottom: 15px; font-size: 22px; text-align: center; 
-    border-bottom: 1px solid #333; padding-bottom: 10px;
+  .nav-links a:hover {
+    color: var(--color-red);
   }
-  .payment-box p { font-size: 16px; margin-bottom: 10px; font-weight: bold; }
-  
-  .copy-row { display: flex; gap: 10px; margin-bottom: 10px; }
-  .payment-box input[type="text"] {
-    flex: 1; padding: 12px;
-    background: #000; border: 1px solid #444; border-radius: 6px;
-    color: #fff; font-size: 18px; text-align: center; font-weight: bold;
-    letter-spacing: 1px;
-  }
-  .copy-btn {
-    padding: 0 20px; background: #333; color: #fff; font-weight: bold;
-    border: 1px solid #555; border-radius: 6px; cursor: pointer;
-    transition: background 0.2s; font-size: 15px;
-  }
-  .copy-btn:hover { background: #555; }
-  
-  .success-msg { color: #4CAF50; font-size: 14px; font-weight: bold; min-height: 20px; margin-bottom: 10px; }
-  
-  .open-insta-btn {
-    width: 100%; padding: 12px; background: var(--red); color: #fff;
-    border: none; border-radius: 20px; font-size: 16px; font-weight: 900;
-    cursor: pointer; transition: transform 0.2s, background 0.2s;
-  }
-  .open-insta-btn:hover { background: var(--red-dark); transform: translateY(-2px); }
 
-  /* ===== schedule info ===== */
-  .info-band{background:#111111; border-top:3px solid var(--red); padding:30px 15px; text-align:center;}
-  .info-card{
-    background:#1a1a1a; padding:20px; border-radius:8px; border-top:3px solid var(--red);
-    max-width:450px; margin:0 auto; box-shadow:0 4px 12px rgba(0,0,0,0.5);
+  .call-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--color-red); color: var(--color-text-main); 
+    font-weight: 800; padding: 8px 20px; border-radius: var(--radius-pill); 
+    text-transform: uppercase; text-decoration: none; font-size: 14px;
+    box-shadow: 0 4px 10px rgba(226,35,26,0.3); transition: all 0.2s;
   }
-  .info-card h3{color:var(--white); font-size:20px; text-transform:uppercase; margin-top:0; margin-bottom:15px; font-weight:900;}
-  .schedule-list{list-style:none; text-align:left; font-size:16px; color:#ccc;}
-  .schedule-list li{padding:8px 0; border-bottom:1px solid #333;}
-  .schedule-list li:last-child{border-bottom:none;}
-  .schedule-highlight{color:var(--red); font-weight:700;}
+  .call-btn:hover { background: var(--color-red-dark); transform: translateY(-2px); }
 
-  /* ===== thumbnail galleries ===== */
-  .gallery-section{max-width:1200px; margin:60px auto 0 auto; text-align:center; padding:0 20px;}
-  .floor-section{
-    padding:40px 0; margin-bottom:40px; 
+  /* =========================================
+     3. HERO SECTION & VIDEO BACKGROUND
+     ========================================= */
+  .hero {
+    position: relative; min-height: 75vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 80px 20px 60px; text-align: center; overflow: hidden;
   }
-  .main-section-heading{
-    font-size:48px; font-family:'Anton', sans-serif; text-transform:uppercase; color:var(--red); margin:0 0 10px 0; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  .hero-video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
   }
-  .floor-desc{font-size:18px; color:#ccc; margin-bottom:35px; line-height: 1.6; font-style: italic;}
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(19,17,16,1) 100%);
+  }
+  .hero-content {
+    position: relative; z-index: 2; width: 100%; max-width: 800px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .hero-logo-img {
+    height: 100px; width: 100px; border-radius: 50%; object-fit: cover; 
+    margin-bottom: 15px; border: 3px solid #fff; box-shadow: 0 0 20px rgba(226,35,26,0.7);
+  }
+  .hero-title {
+    font-family: var(--font-heading); font-size: clamp(42px, 8vw, 80px); 
+    letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    margin-bottom: 5px; text-transform: uppercase;
+  }
+  .hero-title span { color: var(--color-red); }
+  .hero-subtitle {
+    font-size: clamp(16px, 2.5vw, 22px); font-weight: 600; color: #e0e0e0; 
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px;
+  }
+  .hero-heading-red {
+    font-family: var(--font-heading); font-size: clamp(24px, 4vw, 40px); 
+    color: var(--color-red); letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase;
+  }
+  .hero-features p {
+    font-weight: 700; letter-spacing: 1px; margin: 8px 0; 
+    color: #e0e0e0; text-transform: uppercase; text-shadow: 1px 1px 4px #000;
+  }
+
+  /* =========================================
+     4. BUTTONS & ACTIONS
+     ========================================= */
+  .button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
   
-  .manual-slider{
-    position:relative; width:100%; height:550px; border-radius:8px; border:3px solid #333;
-    background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:20px;
+  .action-btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    height: 42px; padding: 0 22px; border: 2px solid transparent; border-radius: var(--radius-pill);
+    color: var(--color-text-main); font-size: 14px; font-weight: 800; text-transform: uppercase; text-decoration: none;
+    cursor: pointer; overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   }
-  .manual-slide-img{width:100%; height:100%; object-fit:cover; transition:opacity 0.2s ease; cursor:pointer;}
+  .action-btn span { position: relative; z-index: 2; text-shadow: 1px 1px 4px #000; }
   
-  .slide-btn {
+  /* Background images for specific buttons */
+  .btn-instapay { background: url('images.jpg') center/cover; }
+  .btn-vodafone { background: url('da825f86efb52423c2785be6a2dd9124.jpg') center/cover; }
+  
+  .action-btn::before {
+    content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 1; transition: background 0.3s;
+  }
+  .action-btn:hover::before { background: rgba(0,0,0,0.4); }
+  .action-btn:hover { transform: scale(1.05); border-color: var(--color-red); }
+
+  .btn-map { background: var(--color-text-main); color: #000; border: none; }
+  .btn-map span { text-shadow: none; }
+  .btn-map::before { display: none; }
+  .btn-map:hover { background: var(--color-red); color: var(--color-text-main); transform: scale(1.05); border-color: transparent;}
+
+  /* =========================================
+     5. PAYMENT MODAL (ORGANIZED GRID)
+     ========================================= */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000; display: none;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+  }
+  .payment-modal-card {
+    background: var(--color-bg-card); border: 2px solid var(--color-red);
+    border-radius: var(--radius-md); padding: 30px; width: 100%; max-width: 650px;
+    position: relative; box-shadow: 0 10px 40px rgba(226,35,26,0.25);
+  }
+  .modal-close {
+    position: absolute; top: 15px; right: 20px; background: none; border: none;
+    color: #888; font-size: 26px; cursor: pointer; transition: color 0.2s; padding: 0;
+  }
+  .modal-close:hover { color: var(--color-red); }
+  
+  .payment-modal-card h2 {
+    text-align: center; font-family: var(--font-heading); font-size: 28px;
+    letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px;
+  }
+
+  .payment-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media(min-width: 600px) { .payment-grid { grid-template-columns: 1fr 1fr; } }
+
+  .payment-method-box {
+    background: #111; border: 1px solid #333; border-radius: var(--radius-md);
+    padding: 20px; text-align: center; display: flex; flex-direction: column;
+  }
+  .payment-method-box h3 { color: var(--color-red); font-family: var(--font-heading); font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; }
+  .payment-method-box p { font-size: 13px; font-weight: 700; color: var(--color-text-muted); margin-bottom: 8px; text-align: left; }
+
+  .copy-group { display: flex; gap: 8px; margin-bottom: 15px; }
+  .copy-group input {
+    flex: 1; padding: 10px; background: #000; border: 1px solid #444; border-radius: var(--radius-sm);
+    color: #fff; font-size: 16px; font-weight: 800; text-align: center; width: 100%;
+  }
+  .copy-group button {
+    padding: 0 15px; background: #333; color: #fff; border: 1px solid #555;
+    border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; transition: background 0.2s;
+  }
+  .copy-group button:hover { background: #555; }
+
+  .launch-app-btn {
+    width: 100%; padding: 12px; background: var(--color-red); color: #fff;
+    border: none; border-radius: var(--radius-pill); font-size: 15px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer; transition: transform 0.2s, background 0.2s; margin-top: auto;
+  }
+  .launch-app-btn:hover { background: var(--color-red-dark); transform: translateY(-2px); }
+
+  .feedback-msg { color: #4CAF50; font-size: 13px; font-weight: 800; min-height: 18px; margin-top: 10px; }
+
+  /* =========================================
+     6. INFO, GALLERY & MARQUEE
+     ========================================= */
+  .info-band { background: #0a0a0a; border-top: 3px solid var(--color-red); padding: 40px 20px; text-align: center; }
+  .schedule-card {
+    background: var(--color-bg-card); padding: 25px; border-radius: var(--radius-md); 
+    border-top: 3px solid var(--color-red); max-width: 500px; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+  .schedule-card h3 { font-size: 22px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
+  .schedule-card ul { list-style: none; font-size: 16px; color: var(--color-text-muted); text-align: left; }
+  .schedule-card li { padding: 10px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;}
+  .schedule-card li:last-child { border-bottom: none; }
+  .highlight { color: var(--color-red); font-weight: 800; }
+
+  /* Gallery Sections */
+  .gallery-wrapper { max-width: 1100px; margin: 60px auto 0; padding: 0 20px; text-align: center; }
+  .gallery-block { margin-bottom: 50px; }
+  .section-title { font-size: 42px; font-family: var(--font-heading); text-transform: uppercase; color: var(--color-red); letter-spacing: 2px; margin-bottom: 10px; }
+  .section-desc { font-size: 16px; color: var(--color-text-muted); font-style: italic; margin-bottom: 30px; }
+  
+  .slider-frame {
+    position: relative; width: 100%; height: 500px; background: #000;
+    border: 3px solid #333; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 15px;
+  }
+  .slider-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; }
+  
+  .nav-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.8); color: white; border: 2px solid var(--red);
-    font-size: 24px; padding: 12px 20px; cursor: pointer; z-index: 5;
-    border-radius: 50%; transition: all 0.2s;
+    background: rgba(0,0,0,0.7); color: #fff; border: 2px solid var(--color-red);
+    width: 45px; height: 45px; border-radius: 50%; font-size: 20px;
+    cursor: pointer; z-index: 5; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center;
   }
-  .slide-btn:hover { background: var(--red); }
-  .slide-btn.prev { left: 15px; }
-  .slide-btn.next { right: 15px; }
+  .nav-arrow:hover { background: var(--color-red); }
+  .nav-arrow.prev { left: 15px; }
+  .nav-arrow.next { right: 15px; }
 
-  .thumbnail-container{display:flex; justify-content:center; flex-wrap:wrap; gap:15px;}
-  .thumb-img{
-    width:100px; height:75px; object-fit:cover; border-radius:6px; cursor:pointer;
-    opacity:0.5; border:3px solid transparent; transition:all 0.3s;
+  .thumbnail-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+  .thumb {
+    width: 90px; height: 65px; object-fit: cover; border-radius: var(--radius-sm); cursor: pointer;
+    opacity: 0.5; border: 3px solid transparent; transition: all 0.2s;
   }
-  .thumb-img:hover, .thumb-img.active-thumb{opacity:1; border-color:var(--red);}
+  .thumb:hover, .thumb.active { opacity: 1; border-color: var(--color-red); }
 
-  /* ===== FULL WIDTH SMOOTH MARQUEE ===== */
-  .marquee-strip {
-    background: var(--red);
-    color: var(--white);
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 10px 0;
-    margin: 40px 0; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+  /* Marquee Strip */
+  .marquee-band {
+    background: var(--color-red); color: var(--color-text-main); padding: 12px 0;
+    margin: 50px 0; overflow: hidden; white-space: nowrap; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   }
-  .marquee-track {
-    display: inline-block;
-    animation: scroll 40s linear infinite; 
-    font-family: 'Anton', sans-serif;
-    font-size: 20px;
-    letter-spacing: 2px;
-    will-change: transform;
+  .marquee-content {
+    display: inline-block; animation: scroll-left 30s linear infinite;
+    font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px;
   }
-  .marquee-track span { padding: 0 40px; }
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+  .marquee-content span { padding: 0 30px; }
+  @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* =========================================
+     7. STANDALONE PAYMENT SECTION
+     ========================================= */
+  .payment-section-standalone {
+    background: #111;
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 3px solid var(--color-red);
+    margin-top: 40px;
   }
 
-  /* ===== reviews ===== */
-  .reviews-section{background:#000000; padding:60px 15px; text-align:center; color:var(--white); border-top:3px solid var(--red); margin-top: 20px;}
-  .reviews-section h2{font-family:'Anton', sans-serif; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; font-size:28px;}
-  .reviews-container{display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:30px auto; max-width:1000px;}
-  .review-box{
-    background:#1a1a1a; padding:20px; border-radius:6px; border-bottom:4px solid var(--red);
-    flex:1 1 240px; max-width:300px; text-align:left; box-shadow:0 5px 15px rgba(0,0,0,0.5);
+  /* =========================================
+     8. REVIEWS SECTION
+     ========================================= */
+  .reviews-area { background: #000; padding: 70px 20px; text-align: center; border-top: 3px solid var(--color-red); }
+  .reviews-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1100px; margin: 35px auto; }
+  
+  .review-card {
+    background: var(--color-bg-card); padding: 25px; border-radius: var(--radius-md);
+    border-bottom: 4px solid var(--color-red); flex: 1 1 250px; max-width: 320px;
+    text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column;
   }
-  .review-stars{color:var(--red); font-size:18px; letter-spacing:1px; margin-bottom:10px;}
-  .review-text{font-size:15px; line-height:1.5; font-style:italic; color:#ccc; margin-bottom:15px;}
-  .review-author{font-weight:900; text-transform:uppercase; font-size:14px; color:var(--white); display:flex; align-items:center; gap:8px;}
-  .review-author::before{content:''; display:inline-block; width:20px; height:2px; background:var(--red);}
+  .stars { color: var(--color-red); font-size: 18px; letter-spacing: 2px; margin-bottom: 12px; }
+  .quote { font-size: 15px; line-height: 1.6; font-style: italic; color: var(--color-text-muted); margin-bottom: 20px; flex-grow: 1; }
+  .reviewer { font-weight: 900; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .reviewer::before { content: ''; display: block; width: 20px; height: 3px; background: var(--color-red); }
 
-  .review-btn{
-    display:inline-block; background:var(--red); color:var(--white); padding:12px 25px;
-    text-decoration:none; font-weight:900; font-size:16px; border-radius:25px;
-    transition:all 0.3s; text-transform:uppercase; margin-top:20px;
+  .btn-reviews {
+    display: inline-block; background: var(--color-red); color: #fff; padding: 14px 30px;
+    text-decoration: none; font-weight: 900; font-size: 15px; border-radius: var(--radius-pill);
+    transition: all 0.3s; text-transform: uppercase; margin-top: 20px;
   }
-  .review-btn:hover{background:var(--red-dark); transform:scale(1.05);}
+  .btn-reviews:hover { background: var(--color-red-dark); transform: scale(1.05); }
 
-  @media (max-width:860px){
-    .manual-slider{height:350px;}
-    .main-section-heading{font-size:36px;}
-    .floor-desc{font-size:15px;}
-    .thumb-img{width:80px; height:60px;}
-    .topbar .wrap { flex-direction: row; }
-    .marquee-track { font-size: 16px; }
-    .hero{ padding-top: 80px; }
-    .hero-logo-img{ height: 75px; width: 75px; }
+  /* =========================================
+     9. RESPONSIVE QUERIES
+     ========================================= */
+  @media (max-width: 860px) {
+    .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; padding-top: 10px;}
+    .topbar-wrap { justify-content: center; }
+  }
+
+  @media (max-width: 768px) {
+    .slider-frame { height: 350px; }
+    .section-title { font-size: 32px; }
+    .thumb { width: 75px; height: 55px; }
+    .marquee-content { font-size: 16px; }
+    .payment-modal-card { padding: 20px; }
   }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="wrap">
+<nav class="topbar">
+  <div class="topbar-wrap">
     <div class="header-left">
       <img src="449780329_498191029456173_7730127466427361362_n.jpg" alt="Super Gym Logo" class="nav-logo-img">
       <div class="logo">SUPER<span>GYM</span></div>
     </div>
-    <a href="tel:01019156087" class="top-cta">📞 Call Now</a>
+    
+    <div class="nav-links">
+      <a href="#main-gym">Main Gym</a>
+      <a href="#womens-gym">Women's Gym</a>
+      <a href="#payment-section">Payment Methods</a>
+      <a href="#reviews">Reviews</a>
+    </div>
+
+    <a href="tel:01019156087" class="call-btn">📞 Call Now</a>
   </div>
-</div>
+</nav>
 
 <header class="hero">
-  <!-- VIDEO BACKGROUND -->
   <video class="hero-video" autoplay loop muted playsinline>
     <source src="gym-video.mp4" type="video/mp4">
   </video>
@@ -355,268 +350,259 @@
   
   <div class="hero-content">
     <img src="449780329_498191029456173_7730127466427361362_n.jpg" alt="Super Gym Logo" class="hero-logo-img">
-    <h1 class="hero-main-title">SUPER <span>GYM</span></h1>
+    <h1 class="hero-title">SUPER <span>GYM</span></h1>
     <p class="hero-subtitle">Super Gym is where you get motivated</p>
-    <h2 class="hero-red-heading">Forged in Sweat Built for Greatness</h2>
+    <h2 class="hero-heading-red">Forged in Sweat Built for Greatness</h2>
     <div class="hero-features">
       <p>✓ Train with Elite Coaches</p>
       <p>✓ Unleash Your True Potential</p>
       <p>✓ Fuel Your Body for Victory</p>
     </div>
   </div>
-    
-  <div class="hero-actions">
-    <p class="payment-title">Pay your membership instantly and start improving</p>
-    <div class="action-buttons-row">
-      <!-- BUTTON TO OPEN THE INSTAPAY MODAL -->
-      <button class="pay-btn btn-instapay" onclick="openModal()">
-        <span>ادفع بـ InstaPay</span>
-      </button>
-      
-      <button class="pay-btn btn-vodafone" onclick="openPaymentApp('vodafone')">
-        <span>Vodafone Cash</span>
-      </button>
-      <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="map-btn">
-        📍 Open Google Maps
-      </a>
-    </div>
-  </div>
 </header>
 
-<!-- INSTAPAY MODAL POPUP -->
-<div id="instapayModal" class="modal-overlay">
-  <div class="payment-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    
-    <h2>الدفع عن طريق InstaPay</h2>
-    <p>رقم InstaPay:</p>
-    
-    <div class="copy-row">
-        <input 
-            type="text" 
-            id="instaNumber" 
-            value="01150474167" 
-            readonly 
-        >
-        <button class="copy-btn" onclick="copyNumber()">
-            نسخ الرقم
-        </button>
-    </div>
-    
-    <p id="message" class="success-msg"></p>
-    
-    <button class="open-insta-btn" onclick="openInstaPay()">
-        افتح InstaPay
-    </button>
-  </div>
-</div>
-
 <section class="info-band">
-  <div class="info-card">
+  <div class="schedule-card">
     <h3>The Grind Doesn't Stop</h3>
-    <ul class="schedule-list">
-      <li><strong>Everyday:</strong> <span class="schedule-highlight">Open 24 Hours</span></li>
-      <li><strong>Tuesday:</strong> Closes at <span class="schedule-highlight">1:00 AM</span></li>
-      <li><strong>Friday:</strong> Opens at <span class="schedule-highlight">1:00 PM</span></li>
+    <ul>
+      <li><span>Everyday:</span> <span class="highlight">Open 24 Hours</span></li>
+      <li><span>Tuesday:</span> <span>Closes at <span class="highlight">1:00 AM</span></span></li>
+      <li><span>Friday:</span> <span>Opens at <span class="highlight">1:00 PM</span></span></li>
     </ul>
   </div>
 </section>
 
-<section class="gallery-section">
-  <!-- MEN GYM FLOOR -->
-  <div class="floor-section">
-    <h2 class="main-section-heading">The Main Floor</h2>
-    <p class="floor-desc">Free weights, plate-loaded machines, and enough iron to keep you busy for years.</p>
-    
-    <div class="manual-slider">
-      <button class="slide-btn prev" onclick="changeSlide('men', -1)">❮</button>
-      <img id="menMainImg" class="manual-slide-img" src="" alt="Men Gym Photo">
-      <button class="slide-btn next" onclick="changeSlide('men', 1)">❯</button>
+<section class="gallery-wrapper">
+  
+  <div class="gallery-block" id="main-gym">
+    <h2 class="section-title">The Main Floor</h2>
+    <p class="section-desc">Free weights, plate-loaded machines, and enough iron to keep you busy for years.</p>
+    <div class="slider-frame">
+      <button class="nav-arrow prev" onclick="navigateSlider('men', -1)">❮</button>
+      <img id="menMainImg" class="slider-img" src="" alt="Men Gym Area">
+      <button class="nav-arrow next" onclick="navigateSlider('men', 1)">❯</button>
     </div>
-    <div class="thumbnail-container" id="menThumbs"></div>
+    <div class="thumbnail-row" id="menThumbs"></div>
   </div>
 
-  <!-- FULL WIDTH MOVING SLIDE (MARQUEE) -->
-  <div class="marquee-strip">
-    <div class="marquee-track">
-      <span>WORKING 24 HOURS &nbsp; • &nbsp; READY FOR YOUR GOALS &nbsp; • &nbsp; WITH BEST COACHES &nbsp; • &nbsp; WITH BEST MACHINES</span>
-      <span>WORKING 24 HOURS &nbsp; • &nbsp; READY FOR YOUR GOALS &nbsp; • &nbsp; WITH BEST COACHES &nbsp; • &nbsp; WITH BEST MACHINES</span>
-      <span>WORKING 24 HOURS &nbsp; • &nbsp; READY FOR YOUR GOALS &nbsp; • &nbsp; WITH BEST COACHES &nbsp; • &nbsp; WITH BEST MACHINES</span>
+</section>
+
+<div class="marquee-band">
+  <div class="marquee-content">
+    <span>WORKING 24 HOURS   •   READY FOR YOUR GOALS   •   WITH BEST COACHES   •   WITH BEST MACHINES</span>
+    <span>WORKING 24 HOURS   •   READY FOR YOUR GOALS   •   WITH BEST COACHES   •   WITH BEST MACHINES</span>
+  </div>
+</div>
+
+<section class="gallery-wrapper" style="margin-top: 0;">
+
+  <div class="gallery-block" id="womens-gym">
+    <h2 class="section-title">The Women's Gym</h2>
+    <p class="section-desc">A dedicated training floor for our women members — cardio, strength machines, and a space built just for them.</p>
+    <div class="slider-frame">
+      <button class="nav-arrow prev" onclick="navigateSlider('women', -1)">❮</button>
+      <img id="womenMainImg" class="slider-img" src="" alt="Women Gym Area">
+      <button class="nav-arrow next" onclick="navigateSlider('women', 1)">❯</button>
     </div>
+    <div class="thumbnail-row" id="womenThumbs"></div>
   </div>
 
-  <!-- WOMEN GYM FLOOR -->
-  <div class="floor-section">
-    <h2 class="main-section-heading">The Women's Gym</h2>
-    <p class="floor-desc">A dedicated training floor for our women members — cardio, strength machines, and a space built just for them.</p>
-    
-    <div class="manual-slider">
-      <button class="slide-btn prev" onclick="changeSlide('women', -1)">❮</button>
-      <img id="womenMainImg" class="manual-slide-img" src="" alt="Women Gym Photo">
-      <button class="slide-btn next" onclick="changeSlide('women', 1)">❯</button>
-    </div>
-    <div class="thumbnail-container" id="womenThumbs"></div>
+</section>
+
+<section class="payment-section-standalone" id="payment-section">
+  <h2 class="section-title">Payment Methods</h2>
+  <p class="section-desc">Pay your membership instantly and start improving.</p>
+  
+  <div class="button-group">
+    <button class="action-btn btn-instapay" onclick="openPaymentModal()">
+      <span>InstaPay</span>
+    </button>
+    <button class="action-btn btn-vodafone" onclick="openPaymentModal()">
+      <span>Vodafone Cash</span>
+    </button>
+    <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="action-btn btn-map">
+      <span>📍 Open Google Maps</span>
+    </a>
   </div>
 </section>
 
-<section class="reviews-section">
-  <h2>Iron Sharpens Iron</h2>
-  <p style="color: #999; margin-bottom: 20px;">See what our community of champions has to say.</p>
+<section class="reviews-area" id="reviews">
+  <h2 class="section-title" style="font-size: 32px;">Iron Sharpens Iron</h2>
+  <p class="section-desc" style="color: #999;">See what our community of champions has to say.</p>
 
-  <div class="reviews-container">
-    <div class="review-box">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"The absolute best gym in the area. Top-tier equipment, always perfectly clean, and the coaching staff actually cares about your progress."</div>
-      <div class="review-author">Omar Hassan</div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <div class="quote">"The absolute best gym in the area. Top-tier equipment, always perfectly clean, and the coaching staff actually cares about your progress."</div>
+      <div class="reviewer">Omar Hassan</div>
     </div>
-
-    <div class="review-box">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"Being open 24 hours is a massive plus for my schedule. The machines are incredibly smooth and well-maintained."</div>
-      <div class="review-author">Kareem Ali</div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <div class="quote">"Being open 24 hours is a massive plus for my schedule. The machines are incredibly smooth and well-maintained."</div>
+      <div class="reviewer">Kareem Ali</div>
     </div>
-
-    <div class="review-box">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"Great community, heavy weights, and intense vibes. You walk in and instantly want to work hard."</div>
-      <div class="review-author">Ahmed Tarek</div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <div class="quote">"Great community, heavy weights, and intense vibes. You walk in and instantly want to work hard."</div>
+      <div class="reviewer">Ahmed Tarek</div>
     </div>
-    
-    <div class="review-box">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"Hands down the cleanest gym I've ever been to. The atmosphere is purely motivational."</div>
-      <div class="review-author">Mohamed Saeed</div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <div class="quote">"Hands down the cleanest gym I've ever been to. The atmosphere is purely motivational."</div>
+      <div class="reviewer">Mohamed Saeed</div>
     </div>
   </div>
 
-  <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="review-btn">
-    ⭐ Read More Reviews on Google
-  </a>
+  <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-reviews">⭐ Read More on Google</a>
 </section>
+
+<div id="paymentModal" class="modal-overlay">
+  <div class="payment-modal-card">
+    <button class="modal-close" onclick="closePaymentModal()">✕</button>
+
+    <h2>Choose Payment Method</h2>
+
+    <div class="payment-grid">
+      <div class="payment-method-box">
+        <h3>InstaPay</h3>
+        <p>Transfer to this number:</p>
+        <div class="copy-group">
+          <input type="text" id="instaNumber" value="01150474167" readonly>
+          <button onclick="copyToClipboard('instaNumber', 'instaMessage')">Copy</button>
+        </div>
+        <p id="instaMessage" class="feedback-msg"></p>
+        <button class="launch-app-btn" onclick="launchApp('instapay://')">Open InstaPay</button>
+      </div>
+
+      <div class="payment-method-box">
+        <h3>Vodafone Cash</h3>
+        <p>Transfer to this number:</p>
+        <div class="copy-group">
+          <input type="text" id="vodafoneNumber" value="01150474167" readonly>
+          <button onclick="copyToClipboard('vodafoneNumber', 'vodafoneMessage')">Copy</button>
+        </div>
+        <p id="vodafoneMessage" class="feedback-msg"></p>
+        <button class="launch-app-btn" onclick="launchApp('vf-cash://')">Open Vodafone Cash</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  /* -------------------------------------
-     INSTAPAY LOGIC & MODAL
-     ------------------------------------- */
-  function openModal() {
-    document.getElementById('instapayModal').style.display = 'flex';
-    document.getElementById("message").innerText = ""; // Clear message on open
+  /* --- 1. MODAL & PAYMENT CONTROLS --- */
+  const modal = document.getElementById('paymentModal');
+
+  function openPaymentModal() {
+    modal.style.display = 'flex';
+    // Reset feedback messages
+    document.getElementById("instaMessage").innerText = "";
+    document.getElementById("vodafoneMessage").innerText = "";
   }
 
-  function closeModal() {
-    document.getElementById('instapayModal').style.display = 'none';
+  function closePaymentModal() {
+    modal.style.display = 'none';
   }
 
-  // Close when clicking outside the box
+  // Close modal when clicking on the dark background overlay
   window.onclick = function(event) {
-    const modal = document.getElementById('instapayModal');
     if (event.target === modal) {
-      modal.style.display = 'none';
+      closePaymentModal();
     }
   };
 
-  function copyNumber() {
-    const number = document.getElementById("instaNumber").value;
-    navigator.clipboard.writeText(number);
-    document.getElementById("message").innerText = "تم نسخ الرقم بنجاح ✅";
+  // Modern Clipboard API approach
+  function copyToClipboard(inputId, msgId) {
+    const copyText = document.getElementById(inputId).value;
+    navigator.clipboard.writeText(copyText)
+      .then(() => {
+        document.getElementById(msgId).innerText = "Copied! ✅";
+        setTimeout(() => { document.getElementById(msgId).innerText = ""; }, 3000);
+      })
+      .catch(() => {
+        alert("Unable to copy. Please manually copy: " + copyText);
+      });
   }
 
-  function openInstaPay() {
-    window.location.href = "instapay://";
+  function launchApp(urlScheme) {
+    window.location.href = urlScheme;
   }
 
-  /* -------------------------------------
-     LOCAL IMAGE ARRAYS (GALLERIES)
-     ------------------------------------- */
-  const MEN_PHOTOS = [
-    '622784833_919657307309541_745649511219026988_n.jpg',
-    '622785796_919657287309543_7730153036218119913_n.jpg',
-    '622797396_919657283976210_1524403142180077258_n.jpg',
-    '622801672_919657033976235_9167567788451199152_n.jpg',
-    '622817291_919657253976213_8135678203700818339_n.jpg'
-  ];
-  
-  const WOMEN_PHOTOS = [
-    '622784142_919657137309558_642360285464742648_n.jpg',
-    '622789317_919657217309550_5289987459012721852_n.jpg',
-    '622805988_919657157309556_7638961007304178328_n.jpg',
-    '622843815_919657100642895_303062898000740554_n.jpg',
-    '623311773_919657173976221_4531618126661088782_n.jpg'
-  ];
+  /* --- 2. GALLERY DATA --- */
+  const galleries = {
+    men: {
+      index: 0,
+      photos: [
+        '622784833_919657307309541_745649511219026988_n.jpg',
+        '622785796_919657287309543_7730153036218119913_n.jpg',
+        '622797396_919657283976210_1524403142180077258_n.jpg',
+        '622801672_919657033976235_9167567788451199152_n.jpg',
+        '622817291_919657253976213_8135678203700818339_n.jpg'
+      ]
+    },
+    women: {
+      index: 0,
+      photos: [
+        '622784142_919657137309558_642360285464742648_n.jpg',
+        '622789317_919657217309550_5289987459012721852_n.jpg',
+        '622805988_919657157309556_7638961007304178328_n.jpg',
+        '622843815_919657100642895_303062898000740554_n.jpg',
+        '623311773_919657173976221_4531618126661088782_n.jpg'
+      ]
+    }
+  };
 
-  /* -------------------------------------
-     SLIDER & THUMBNAIL LOGIC
-     ------------------------------------- */
-  let menSlideIndex = 0;
-  let womenSlideIndex = 0;
+  /* --- 3. GALLERY CONTROLS --- */
+  function initGallery(type) {
+    const container = document.getElementById(`${type}Thumbs`);
+    const mainImg = document.getElementById(`${type}MainImg`);
+    const photos = galleries[type].photos;
 
-  function initGallery(mainImgId, thumbContainerId, photos, galleryType) {
-    const mainImg = document.getElementById(mainImgId);
-    const thumbContainer = document.getElementById(thumbContainerId);
-    
+    // Set Initial Image
     mainImg.src = photos[0];
 
-    photos.forEach((photo, index) => {
+    // Create Thumbnails
+    photos.forEach((photo, idx) => {
       const img = document.createElement('img');
       img.src = photo;
-      img.className = 'thumb-img' + (index === 0 ? ' active-thumb' : '');
-      
-      img.onclick = () => {
-        if (galleryType === 'men') menSlideIndex = index;
-        else womenSlideIndex = index;
-        updateGalleryView(mainImgId, thumbContainerId, photos, index);
-      };
-      
-      thumbContainer.appendChild(img);
+      img.className = `thumb ${idx === 0 ? 'active' : ''}`;
+      img.onclick = () => renderGalleryChange(type, idx);
+      container.appendChild(img);
     });
   }
 
-  function changeSlide(gallery, direction) {
-    if (gallery === 'men') {
-      menSlideIndex += direction;
-      if (menSlideIndex >= MEN_PHOTOS.length) menSlideIndex = 0;
-      if (menSlideIndex < 0) menSlideIndex = MEN_PHOTOS.length - 1;
-      updateGalleryView('menMainImg', 'menThumbs', MEN_PHOTOS, menSlideIndex);
-    } else {
-      womenSlideIndex += direction;
-      if (womenSlideIndex >= WOMEN_PHOTOS.length) womenSlideIndex = 0;
-      if (womenSlideIndex < 0) womenSlideIndex = WOMEN_PHOTOS.length - 1;
-      updateGalleryView('womenMainImg', 'womenThumbs', WOMEN_PHOTOS, womenSlideIndex);
-    }
+  function navigateSlider(type, direction) {
+    const data = galleries[type];
+    const total = data.photos.length;
+    
+    data.index += direction;
+    if (data.index >= total) data.index = 0;
+    if (data.index < 0) data.index = total - 1;
+    
+    renderGalleryChange(type, data.index);
   }
 
-  function updateGalleryView(mainImgId, thumbContainerId, photos, index) {
-    const mainImg = document.getElementById(mainImgId);
+  function renderGalleryChange(type, newIndex) {
+    galleries[type].index = newIndex;
+    const mainImg = document.getElementById(`${type}MainImg`);
+    const thumbs = document.getElementById(`${type}Thumbs`).querySelectorAll('.thumb');
+    
+    // Smooth Fade Transition
     mainImg.style.opacity = 0.5;
     setTimeout(() => {
-      mainImg.src = photos[index];
+      mainImg.src = galleries[type].photos[newIndex];
       mainImg.style.opacity = 1;
     }, 150);
 
-    const thumbContainer = document.getElementById(thumbContainerId);
-    thumbContainer.querySelectorAll('.thumb-img').forEach((t, i) => {
-      if (i === index) t.classList.add('active-thumb');
-      else t.classList.remove('active-thumb');
+    // Update Active Thumbnail State
+    thumbs.forEach((t, i) => {
+      t.classList.toggle('active', i === newIndex);
     });
   }
 
-  /* -------------------------------------
-     VODAFONE CASH APP REDIRECTION
-     ------------------------------------- */
-  function openPaymentApp(kind){
-    var isAndroid = /Android/i.test(navigator.userAgent);
-    if(kind === 'vodafone'){
-      if(isAndroid){
-        window.location.href = 'intent://#Intent;package=com.emeint.android.myservices;scheme=https;S.browser_fallback_url=' + encodeURIComponent('tel:*9*7%23') + ';end';
-      } else {
-        window.location.href = 'tel:*9*7%23';
-      }
-    }
-  }
-
+  // Initialize both galleries when page loads
   window.addEventListener('DOMContentLoaded', () => {
-    initGallery('menMainImg', 'menThumbs', MEN_PHOTOS, 'men');
-    initGallery('womenMainImg', 'womenThumbs', WOMEN_PHOTOS, 'women');
+    initGallery('men');
+    initGallery('women');
   });
 </script>
 </body>
