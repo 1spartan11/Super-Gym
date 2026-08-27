@@ -147,7 +147,7 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   }
   
-  .btn-instapay{background-image:url('images.jpg');}
+  .btn-instapay{background-image:url('images.jpg'); direction: rtl;}
   .btn-vodafone{background-image:url('da825f86efb52423c2785be6a2dd9124.jpg');}
   
   .pay-btn::before{
@@ -165,6 +165,67 @@
     border-radius:20px; transition:all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   }
   .map-btn:hover{background:var(--red); color:var(--white); transform:scale(1.05);}
+
+  /* ===== MODAL POPUP STYLES ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .payment-box {
+    background: #1a1a1a;
+    border: 2px solid var(--red);
+    border-radius: 10px;
+    padding: 30px 25px;
+    max-width: 420px; width: 100%;
+    box-shadow: 0 10px 30px rgba(226,35,26,0.3);
+    position: relative;
+    text-align: right;
+    direction: rtl;
+    color: var(--white);
+  }
+  .modal-close {
+    position: absolute; top: 12px; left: 15px;
+    background: none; border: none;
+    color: #888; font-size: 24px; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--red); }
+  
+  .payment-box h2 {
+    color: var(--white); font-family: 'Anton', sans-serif, 'Work Sans'; 
+    margin-bottom: 15px; font-size: 22px; text-align: center; 
+    border-bottom: 1px solid #333; padding-bottom: 10px;
+  }
+  .payment-box p { font-size: 16px; margin-bottom: 10px; font-weight: bold; }
+  
+  .copy-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .payment-box input[type="text"] {
+    flex: 1; padding: 12px;
+    background: #000; border: 1px solid #444; border-radius: 6px;
+    color: #fff; font-size: 18px; text-align: center; font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .copy-btn {
+    padding: 0 20px; background: #333; color: #fff; font-weight: bold;
+    border: 1px solid #555; border-radius: 6px; cursor: pointer;
+    transition: background 0.2s; font-size: 15px;
+  }
+  .copy-btn:hover { background: #555; }
+  
+  .success-msg { color: #4CAF50; font-size: 14px; font-weight: bold; min-height: 20px; margin-bottom: 10px; }
+  
+  .open-insta-btn {
+    width: 100%; padding: 12px; background: var(--red); color: #fff;
+    border: none; border-radius: 20px; font-size: 16px; font-weight: 900;
+    cursor: pointer; transition: transform 0.2s, background 0.2s;
+  }
+  .open-insta-btn:hover { background: var(--red-dark); transform: translateY(-2px); }
 
   /* ===== schedule info ===== */
   .info-band{background:#111111; border-top:3px solid var(--red); padding:30px 15px; text-align:center;}
@@ -307,9 +368,11 @@
   <div class="hero-actions">
     <p class="payment-title">Pay your membership instantly and start improving</p>
     <div class="action-buttons-row">
-      <button class="pay-btn btn-instapay" onclick="openPaymentApp('instapay')">
-        <span>InstaPay</span>
+      <!-- BUTTON TO OPEN THE INSTAPAY MODAL -->
+      <button class="pay-btn btn-instapay" onclick="openModal()">
+        <span>ادفع بـ InstaPay</span>
       </button>
+      
       <button class="pay-btn btn-vodafone" onclick="openPaymentApp('vodafone')">
         <span>Vodafone Cash</span>
       </button>
@@ -319,6 +382,34 @@
     </div>
   </div>
 </header>
+
+<!-- INSTAPAY MODAL POPUP -->
+<div id="instapayModal" class="modal-overlay">
+  <div class="payment-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    
+    <h2>الدفع عن طريق InstaPay</h2>
+    <p>رقم InstaPay:</p>
+    
+    <div class="copy-row">
+        <input 
+            type="text" 
+            id="instaNumber" 
+            value="01150474167" 
+            readonly 
+        >
+        <button class="copy-btn" onclick="copyNumber()">
+            نسخ الرقم
+        </button>
+    </div>
+    
+    <p id="message" class="success-msg"></p>
+    
+    <button class="open-insta-btn" onclick="openInstaPay()">
+        افتح InstaPay
+    </button>
+  </div>
+</div>
 
 <section class="info-band">
   <div class="info-card">
@@ -405,6 +496,36 @@
 
 <script>
   /* -------------------------------------
+     INSTAPAY LOGIC & MODAL
+     ------------------------------------- */
+  function openModal() {
+    document.getElementById('instapayModal').style.display = 'flex';
+    document.getElementById("message").innerText = ""; // Clear message on open
+  }
+
+  function closeModal() {
+    document.getElementById('instapayModal').style.display = 'none';
+  }
+
+  // Close when clicking outside the box
+  window.onclick = function(event) {
+    const modal = document.getElementById('instapayModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+
+  function copyNumber() {
+    const number = document.getElementById("instaNumber").value;
+    navigator.clipboard.writeText(number);
+    document.getElementById("message").innerText = "تم نسخ الرقم بنجاح ✅";
+  }
+
+  function openInstaPay() {
+    window.location.href = "instapay://";
+  }
+
+  /* -------------------------------------
      LOCAL IMAGE ARRAYS (GALLERIES)
      ------------------------------------- */
   const MEN_PHOTOS = [
@@ -480,17 +601,11 @@
   }
 
   /* -------------------------------------
-     PAYMENT APP REDIRECTION
+     VODAFONE CASH APP REDIRECTION
      ------------------------------------- */
   function openPaymentApp(kind){
     var isAndroid = /Android/i.test(navigator.userAgent);
-    if(kind === 'instapay'){
-      if(isAndroid){
-        window.location.href = 'intent://#Intent;package=com.egyptianbanks.instapay;scheme=https;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.egyptianbanks.instapay') + ';end';
-      } else {
-        window.location.href = 'https://www.instapay.eg/';
-      }
-    } else if(kind === 'vodafone'){
+    if(kind === 'vodafone'){
       if(isAndroid){
         window.location.href = 'intent://#Intent;package=com.emeint.android.myservices;scheme=https;S.browser_fallback_url=' + encodeURIComponent('tel:*9*7%23') + ';end';
       } else {
