@@ -448,7 +448,9 @@
       For the best experience, please open Super Gym in your browser.
     </p>
     <div class="fb-steps" id="fbSteps">
-      </div>
+      <strong>Open this website in your browser</strong><br>
+      Tap the <b>•••</b> menu at the top/bottom of your screen and choose <b>Open in Browser</b> or <b>Open in Safari</b>.
+    </div>
     <button class="fb-browser-btn" onclick="openExternalBrowser()">
       Open in Browser
     </button>
@@ -641,7 +643,6 @@
         <a
           href="https://ipn.eg/S/alighareeb170/instapay/7wP35x"
           class="launch-app-btn"
-          onclick="copyInstaPayNumber()"
           target="_blank"
           rel="noopener">
           Pay with InstaPay
@@ -754,22 +755,6 @@
         "Please copy this number manually:\n" +
         input.value
       );
-    }
-  }
-
-  function copyInstaPayNumber() {
-    const number = "01150474167";
-
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(number);
-    } else {
-        const input = document.createElement("input");
-        input.value = number;
-        document.body.appendChild(input);
-        input.select();
-        input.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        document.body.removeChild(input);
     }
   }
 
