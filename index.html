@@ -610,38 +610,92 @@
 
 <div id="paymentModal" class="modal-overlay">
   <div class="payment-modal-card">
+
     <button class="modal-close" onclick="closePaymentModal()">✕</button>
 
     <h2>Choose Payment Method</h2>
 
     <div class="payment-grid">
-      <div class="payment-method-box">
-        <h3>InstaPay</h3>
-        <p>Transfer to this number:</p>
-        <div class="copy-group">
-          <input type="text" id="instaNumber" value="01150474167" readonly>
-          <button onclick="copyToClipboard('instaNumber', 'instaMessage')">Copy</button>
-        </div>
-        <p id="instaMessage" class="feedback-msg"></p>
-        <a href="#" onclick="launchInstaPayDirect(event)" class="launch-app-btn">Open InstaPay</a>
-      </div>
 
       <div class="payment-method-box">
-        <h3>Vodafone Cash</h3>
+
+        <h3>InstaPay</h3>
+
         <p>Transfer to this number:</p>
+
         <div class="copy-group">
-          <input type="text" id="vodafoneNumber" value="01150474167" readonly>
-          <button onclick="copyToClipboard('vodafoneNumber', 'vodafoneMessage')">Copy</button>
+          <input
+            type="text"
+            id="instaNumber"
+            value="01150474167"
+            readonly
+          >
+
+          <button onclick="copyPaymentNumber('instaNumber','instaMessage')">
+            Copy
+          </button>
         </div>
-        <p id="vodafoneMessage" class="feedback-msg"></p>
-        <a href="tel:*9*7%23" class="launch-app-btn">Open Vodafone Cash</a>
+
+        <p id="instaMessage" class="feedback-msg"></p>
+
+        <button
+          type="button"
+          class="launch-app-btn"
+          onclick="prepareInstaPay()">
+          Copy Number & Continue
+        </button>
+
       </div>
+
+
+      <div class="payment-method-box">
+
+        <h3>Vodafone Cash</h3>
+
+        <p>Transfer to this number:</p>
+
+        <div class="copy-group">
+          <input
+            type="text"
+            id="vodafoneNumber"
+            value="01150474167"
+            readonly
+          >
+
+          <button onclick="copyPaymentNumber('vodafoneNumber','vodafoneMessage')">
+            Copy
+          </button>
+        </div>
+
+        <p id="vodafoneMessage" class="feedback-msg"></p>
+
+        <button
+          type="button"
+          class="launch-app-btn"
+          onclick="prepareVodafoneCash()">
+          Copy Number & Continue
+        </button>
+
+      </div>
+
     </div>
+
+    <p style="
+      text-align:center;
+      color:#999;
+      font-size:12px;
+      margin-top:20px;
+      line-height:1.6;
+    ">
+      After copying the number, open your payment app,
+      paste the number, enter the amount, and complete the payment.
+    </p>
+
   </div>
-</div>
+</div> 
 
 <script>
-  /* --- 1. MODAL & PAYMENT CONTROLS --- */
+  /* --- 1. MODAL CONTROLS --- */
   const modal = document.getElementById('paymentModal');
 
   function openPaymentModal() {
@@ -660,30 +714,75 @@
     }
   };
 
-  function copyToClipboard(inputId, msgId) {
-    const copyText = document.getElementById(inputId).value;
-    navigator.clipboard.writeText(copyText)
-      .then(() => {
-        document.getElementById(msgId).innerText = "Copied! ✅";
-        setTimeout(() => { document.getElementById(msgId).innerText = ""; }, 3000);
-      })
-      .catch(() => {
-        alert("Unable to copy. Please manually copy: " + copyText);
-      });
+  /* --- 2. PAYMENT & COPY LOGIC --- */
+  function copyPaymentNumber(inputId, messageId) {
+    const input = document.getElementById(inputId);
+    const message = document.getElementById(messageId);
+    const number = input.value;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(number)
+        .then(() => {
+          message.innerText = "Number copied successfully! ✅";
+          setTimeout(() => {
+            message.innerText = "";
+          }, 3000);
+        })
+        .catch(() => {
+          fallbackCopy(input, message);
+        });
+    } else {
+      fallbackCopy(input, message);
+    }
   }
 
-  /* --- 2. DIRECT APP LAUNCHER (NO APP STORE FALLBACK) --- */
-  function launchInstaPayDirect(event) {
-    event.preventDefault();
-    
-    var isAndroid = /Android/i.test(navigator.userAgent);
+  function fallbackCopy(input, message) {
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, 99999);
 
-    // Blast directly to the app, ignoring the App/Play stores entirely.
-    if (isAndroid) {
-      window.top.location.href = "intent://#Intent;scheme=instapay;package=com.egyptianbanks.instapay;end";
-    } else {
-      window.top.location.href = "instapay://";
+    try {
+      document.execCommand("copy");
+      message.innerText = "Number copied successfully! ✅";
+      setTimeout(() => {
+        message.innerText = "";
+      }, 3000);
+    } catch (error) {
+      alert(
+        "Please copy this number manually:\n" +
+        input.value
+      );
     }
+  }
+
+  function prepareInstaPay() {
+    copyPaymentNumber(
+      "instaNumber",
+      "instaMessage"
+    );
+
+    setTimeout(() => {
+      alert(
+        "InstaPay number copied ✅\n\n" +
+        "Open InstaPay, paste the number, " +
+        "enter the amount, and complete the payment."
+      );
+    }, 200);
+  }
+
+  function prepareVodafoneCash() {
+    copyPaymentNumber(
+      "vodafoneNumber",
+      "vodafoneMessage"
+    );
+
+    setTimeout(() => {
+      alert(
+        "Vodafone Cash number copied ✅\n\n" +
+        "Open Vodafone Cash, paste the number, " +
+        "enter the amount, and complete the payment."
+      );
+    }, 200);
   }
 
   /* --- 3. GALLERY DATA & CONTROLS --- */
