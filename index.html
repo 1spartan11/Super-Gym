@@ -638,12 +638,14 @@
 
         <p id="instaMessage" class="feedback-msg"></p>
 
-        <button
-          type="button"
+        <a
+          href="https://ipn.eg/S/alighareeb170/instapay/7wP35x"
           class="launch-app-btn"
-          onclick="prepareInstaPay()">
-          Copy Number & Continue
-        </button>
+          onclick="copyInstaPayNumber()"
+          target="_blank"
+          rel="noopener">
+          Pay with InstaPay
+        </a>
 
       </div>
 
@@ -755,19 +757,20 @@
     }
   }
 
-  function prepareInstaPay() {
-    copyPaymentNumber(
-      "instaNumber",
-      "instaMessage"
-    );
+  function copyInstaPayNumber() {
+    const number = "01150474167";
 
-    setTimeout(() => {
-      alert(
-        "InstaPay number copied ✅\n\n" +
-        "Open InstaPay, paste the number, " +
-        "enter the amount, and complete the payment."
-      );
-    }, 200);
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(number);
+    } else {
+        const input = document.createElement("input");
+        input.value = number;
+        document.body.appendChild(input);
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        document.body.removeChild(input);
+    }
   }
 
   function prepareVodafoneCash() {
@@ -850,80 +853,49 @@
     });
   }
 
-  /* --- 4. FACEBOOK BROWSER DETECTOR & OVERRIDE LOGIC --- */
+  /* --- 4. NEW FACEBOOK BROWSER DETECTOR & OVERRIDE LOGIC --- */
   (function () {
-    const userAgent = navigator.userAgent || "";
-    const isFacebookBrowser = /FBAN|FBAV|FB_IAB|FB4A|FBIOS|FBSS|Messenger/i.test(userAgent);
-    const isAndroid = /Android/i.test(userAgent);
-    const isIPhone = /iPhone|iPad|iPod/i.test(userAgent);
+    const ua = navigator.userAgent || "";
+    const isFacebook = /FBAN|FBAV|FB_IAB|FB4A|FBIOS|FBSS|Messenger/i.test(ua);
 
-    if (isFacebookBrowser) {
-      window.addEventListener("load", function () {
+    if (!isFacebook) return;
+
+    window.addEventListener("load", function () {
         const notice = document.getElementById("facebookBrowserNotice");
-        const steps = document.getElementById("fbSteps");
-
-        if (isAndroid) {
-          steps.innerHTML = `
-            <strong>On Android:</strong><br>
-            1. Tap the <b>•••</b> menu<br>
-            2. Choose <b>Open in external browser</b><br>
-            3. Continue using the website
-          `;
-        } else if (isIPhone) {
-          steps.innerHTML = `
-            <strong>On iPhone:</strong><br>
-            1. Tap the <b>•••</b> menu<br>
-            2. Choose <b>Open in Safari</b><br>
-            3. Continue using the website
-          `;
-        } else {
-          steps.innerHTML = `
-            <strong>Open this website in your browser</strong><br>
-            Use the <b>•••</b> menu and choose the external browser option.
-          `;
+        if (notice) {
+            notice.style.display = "flex";
         }
-        notice.style.display = "flex";
-      });
-    }
+    });
   })();
 
   function openExternalBrowser() {
-    const currentUrl = window.location.href;
-    const newWindow = window.open(currentUrl, "_blank", "noopener,noreferrer");
+    const url = window.location.href;
+    // Try to open the page outside Facebook
+    const newWindow = window.open(url, "_blank");
+
+    // Facebook may block the request
     if (!newWindow) {
-      alert("Please tap the ••• menu in Facebook and choose 'Open in Browser'.");
+        alert(
+            "Please tap the ••• menu in Facebook and choose " +
+            "'Open in Browser'."
+        );
     }
   }
 
   function copyWebsiteLink() {
     const url = window.location.href;
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(url)
-        .then(function () {
-          alert("Website link copied successfully!");
-        })
-        .catch(function () {
-          copyWebsiteFallback(url);
-        });
-    } else {
-      copyWebsiteFallback(url);
-    }
-  }
 
-  function copyWebsiteFallback(text) {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand("copy");
-      alert("Website link copied successfully!");
-    } catch (error) {
-      alert("Please copy the website link manually:\n" + text);
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                alert("Website link copied successfully!");
+            })
+            .catch(() => {
+                alert("Copy this link manually:\n" + url);
+            });
+    } else {
+        alert("Copy this link manually:\n" + url);
     }
-    document.body.removeChild(textarea);
   }
 
   function closeFacebookNotice() {
