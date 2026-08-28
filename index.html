@@ -619,32 +619,15 @@
 
     <div class="payment-grid">
 
-      <div class="payment-method-box">
-
-        <h3>InstaPay</h3>
-
-        <p>Transfer to this number:</p>
-
-        <div class="copy-group">
-          <input
-            type="text"
-            id="instaNumber"
-            value="01150474167"
-            readonly
-          >
-
-          <button onclick="copyPaymentNumber('instaNumber','instaMessage')">
-            Copy
-          </button>
-        </div>
-
-        <p id="instaMessage" class="feedback-msg"></p>
+      <div class="payment-method-box" style="display: flex; align-items: center; justify-content: center; padding: 10px; border: none; background: transparent;">
 
         <a
           href="https://ipn.eg/S/alighareeb170/instapay/7wP35x"
           class="launch-app-btn"
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 25px; margin: 0; width: auto; font-size: 13px; outline: none;"
           target="_blank"
           rel="noopener">
+          <img src="images.jpg" alt="InstaPay" style="width: 35px; height: 35px; border-radius: 8px;">
           Pay with InstaPay
         </a>
 
@@ -703,7 +686,6 @@
 
   function openPaymentModal() {
     modal.style.display = 'flex';
-    document.getElementById("instaMessage").innerText = "";
     document.getElementById("vodafoneMessage").innerText = "";
   }
 
