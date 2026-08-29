@@ -95,11 +95,23 @@
     border: 2px solid #fff; box-shadow: 0 0 8px rgba(226,35,26,0.5);
   }
   .nav-links { display: flex; gap: 20px; align-items: center; }
+  
+  /* UPDATED NAVIGATION LINK ANIMATION */
   .nav-links a {
-    color: var(--color-text-main); text-decoration: none; font-weight: 800;
-    font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s;
+    color: var(--color-text-main); 
+    text-decoration: none; 
+    font-weight: 800;
+    font-size: 14px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    display: inline-block; /* Required to scale the element */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy smooth transition */
   }
-  .nav-links a:hover { color: var(--color-red); }
+  .nav-links a:hover { 
+    color: var(--color-red); 
+    transform: scale(1.2); /* Gets bigger */
+    margin: 0 12px; /* Pushes the adjacent links aside */
+  }
 
   .call-btn {
     display: flex; align-items: center; gap: 8px;
