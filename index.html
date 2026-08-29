@@ -13,8 +13,8 @@
   :root {
     --color-red: #E2231A;
     --color-red-dark: #A8140D;
-    --color-bg-main: #131110;
-    --color-bg-card: #1a1a1a;
+    --color-bg-glass: rgba(20, 20, 20, 0.7); /* Glass effect */
+    --color-bg-card-glass: rgba(30, 30, 30, 0.6); /* Card Glass */
     --color-text-main: #FFFFFF;
     --color-text-muted: #cccccc;
     --font-heading: 'Anton', sans-serif;
@@ -26,8 +26,14 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+  
   body {
-    background-color: var(--color-bg-main);
+    background-color: #0f0f0f;
+    /* Subtle background glow so the glass blur has something to interact with */
+    background-image: 
+      radial-gradient(circle at 0% 20%, rgba(226, 35, 26, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 100% 80%, rgba(226, 35, 26, 0.08) 0%, transparent 40%);
+    background-attachment: fixed;
     color: var(--color-text-main);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -41,12 +47,36 @@
   }
 
   /* =========================================
-     2. NAVIGATION BAR
+     2. ANIMATIONS (MOTIVATION)
+     ========================================= */
+  @keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Classes applied by JavaScript on scroll */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* =========================================
+     3. NAVIGATION BAR
      ========================================= */
   .topbar {
     position: sticky; top: 0; z-index: 50;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 3px solid var(--color-red);
   }
   .topbar-wrap {
@@ -55,13 +85,8 @@
     flex-wrap: wrap; 
     gap: 15px;
   }
-  
-  /* Hidden click logic added here (cursor: pointer) */
   .header-left { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    cursor: pointer; 
+    display: flex; align-items: center; gap: 12px; cursor: pointer; 
   }
   .logo { font-family: var(--font-heading); font-size: 26px; letter-spacing: 1px; }
   .logo span { color: var(--color-red); }
@@ -69,23 +94,12 @@
     height: 45px; width: 45px; border-radius: 50%; object-fit: cover; 
     border: 2px solid #fff; box-shadow: 0 0 8px rgba(226,35,26,0.5);
   }
-  
-  /* Navigation Tabs */
-  .nav-links {
-    display: flex; gap: 20px; align-items: center;
-  }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
   .nav-links a {
-    color: var(--color-text-main);
-    text-decoration: none;
-    font-weight: 800;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.2s;
+    color: var(--color-text-main); text-decoration: none; font-weight: 800;
+    font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s;
   }
-  .nav-links a:hover {
-    color: var(--color-red);
-  }
+  .nav-links a:hover { color: var(--color-red); }
 
   .call-btn {
     display: flex; align-items: center; gap: 8px;
@@ -97,12 +111,13 @@
   .call-btn:hover { background: var(--color-red-dark); transform: translateY(-2px); }
 
   /* =========================================
-     3. HERO SECTION & VIDEO BACKGROUND
+     4. HERO SECTION (VIDEO BACKGROUND)
      ========================================= */
   .hero {
-    position: relative; min-height: 75vh;
+    position: relative; min-height: 80vh;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 80px 20px 60px; text-align: center; overflow: hidden;
+    padding: 80px 20px 60px; text-align: center;
+    overflow: hidden; /* Keeps video inside this section */
   }
   .hero-video {
     position: absolute; inset: 0; width: 100%; height: 100%;
@@ -110,348 +125,219 @@
   }
   .hero-overlay {
     position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(19,17,16,1) 100%);
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(15,15,15,1) 100%);
   }
   .hero-content {
     position: relative; z-index: 2; width: 100%; max-width: 800px;
     display: flex; flex-direction: column; align-items: center;
   }
   .hero-logo-img {
-    height: 100px; width: 100px; border-radius: 50%; object-fit: cover; 
-    margin-bottom: 15px; border: 3px solid #fff; box-shadow: 0 0 20px rgba(226,35,26,0.7);
+    height: 110px; width: 110px; border-radius: 50%; object-fit: cover; 
+    margin-bottom: 15px; border: 3px solid #fff; box-shadow: 0 0 30px rgba(226,35,26,0.8);
+    animation: popIn 1s ease-out forwards;
   }
   .hero-title {
-    font-family: var(--font-heading); font-size: clamp(42px, 8vw, 80px); 
-    letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    font-family: var(--font-heading); font-size: clamp(45px, 9vw, 90px); 
+    letter-spacing: 2px; text-shadow: 2px 2px 15px rgba(0,0,0,1);
     margin-bottom: 5px; text-transform: uppercase;
+    opacity: 0; animation: slideUpFade 1s ease-out 0.2s forwards;
   }
   .hero-title span { color: var(--color-red); }
   .hero-subtitle {
     font-size: clamp(16px, 2.5vw, 22px); font-weight: 600; color: #e0e0e0; 
     text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px;
+    opacity: 0; animation: slideUpFade 1s ease-out 0.4s forwards;
   }
   .hero-heading-red {
     font-family: var(--font-heading); font-size: clamp(24px, 4vw, 40px); 
     color: var(--color-red); letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase;
+    opacity: 0; animation: slideUpFade 1s ease-out 0.6s forwards;
   }
   .hero-features p {
-    font-weight: 700; letter-spacing: 1px; margin: 8px 0; 
-    color: #e0e0e0; text-transform: uppercase; text-shadow: 1px 1px 4px #000;
+    font-weight: 800; letter-spacing: 1px; margin: 8px 0; font-size: 16px;
+    color: #fff; text-transform: uppercase; text-shadow: 2px 2px 5px #000;
+    opacity: 0; animation: slideUpFade 1s ease-out forwards;
   }
+  .hero-features p:nth-child(1) { animation-delay: 0.8s; }
+  .hero-features p:nth-child(2) { animation-delay: 1.0s; }
+  .hero-features p:nth-child(3) { animation-delay: 1.2s; }
 
   /* =========================================
-     4. BUTTONS & ACTIONS
+     5. GLASSMORPHISM SECTIONS (BLUR FILTERS)
      ========================================= */
-  .button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
-  
-  .action-btn {
-    position: relative; display: inline-flex; align-items: center; justify-content: center;
-    height: 42px; padding: 0 22px; border: 2px solid transparent; border-radius: var(--radius-pill);
-    color: var(--color-text-main); font-size: 14px; font-weight: 800; text-transform: uppercase; text-decoration: none;
-    cursor: pointer; overflow: hidden; transition: transform 0.2s, border-color 0.2s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  .glass-section {
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 2px solid rgba(226,35,26, 0.5);
+    padding: 60px 20px;
+    text-align: center;
   }
-  .action-btn span { position: relative; z-index: 2; text-shadow: 1px 1px 4px #000; }
-  
-  .action-btn::before {
-    content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 1; transition: background 0.3s;
-  }
-  .action-btn:hover::before { background: rgba(0,0,0,0.4); }
-  .action-btn:hover { transform: scale(1.05); border-color: var(--color-red); }
-
-  /* =========================================
-     5. PAYMENT MODAL (ORGANIZED GRID)
-     ========================================= */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 1000; display: none;
-    align-items: center; justify-content: center; padding: 20px;
-    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
-  }
-  .payment-modal-card {
-    background: var(--color-bg-card); border: 2px solid var(--color-red);
-    border-radius: var(--radius-md); padding: 30px; width: 100%; max-width: 650px;
-    position: relative; box-shadow: 0 10px 40px rgba(226,35,26,0.25);
-  }
-  .modal-close {
-    position: absolute; top: 15px; right: 20px; background: none; border: none;
-    color: #888; font-size: 26px; cursor: pointer; transition: color 0.2s; padding: 0;
-  }
-  .modal-close:hover { color: var(--color-red); }
-  
-  .payment-modal-card h2 {
-    text-align: center; font-family: var(--font-heading); font-size: 28px;
-    letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px;
+  .glass-card {
+    background: var(--color-bg-card-glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-radius: var(--radius-md);
   }
 
-  .payment-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-  @media(min-width: 600px) { .payment-grid { grid-template-columns: 1fr 1fr; } }
-
-  .payment-method-box {
-    background: #111; border: 1px solid #333; border-radius: var(--radius-md);
-    padding: 20px; text-align: center; display: flex; flex-direction: column;
-  }
-  .payment-method-box h3 { color: var(--color-red); font-family: var(--font-heading); font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; }
-  .payment-method-box p { font-size: 13px; font-weight: 700; color: var(--color-text-muted); margin-bottom: 8px; text-align: left; }
-
-  .copy-group { display: flex; gap: 8px; margin-bottom: 15px; }
-  .copy-group input {
-    flex: 1; padding: 10px; background: #000; border: 1px solid #444; border-radius: var(--radius-sm);
-    color: #fff; font-size: 16px; font-weight: 800; text-align: center; width: 100%;
-  }
-  .copy-group button {
-    padding: 0 15px; background: #333; color: #fff; border: 1px solid #555;
-    border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; transition: background 0.2s;
-  }
-  .copy-group button:hover { background: #555; }
-
-  .launch-app-btn {
-    display: block; box-sizing: border-box; text-align: center; text-decoration: none;
-    width: 100%; padding: 12px; background: var(--color-red); color: #fff;
-    border: none; border-radius: var(--radius-pill); font-size: 15px; font-weight: 900;
-    text-transform: uppercase; cursor: pointer; transition: transform 0.2s, background 0.2s; margin-top: auto;
-  }
-  .launch-app-btn:hover { background: var(--color-red-dark); transform: translateY(-2px); }
-
-  .feedback-msg { color: #4CAF50; font-size: 13px; font-weight: 800; min-height: 18px; margin-top: 10px; }
-
-  /* =========================================
-     6. INFO, GALLERY & MARQUEE
-     ========================================= */
-  .info-band { background: #0a0a0a; border-top: 3px solid var(--color-red); padding: 40px 20px; text-align: center; }
+  /* Schedule Card */
   .schedule-card {
-    background: var(--color-bg-card); padding: 25px; border-radius: var(--radius-md); 
-    border-top: 3px solid var(--color-red); max-width: 500px; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    padding: 30px; max-width: 500px; margin: 0 auto;
+    border-top: 3px solid var(--color-red);
   }
-  .schedule-card h3 { font-size: 22px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
-  .schedule-card ul { list-style: none; font-size: 16px; color: var(--color-text-muted); text-align: left; }
-  .schedule-card li { padding: 10px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;}
+  .schedule-card h3 { font-size: 24px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
+  .schedule-card ul { list-style: none; font-size: 16px; text-align: left; }
+  .schedule-card li { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;}
   .schedule-card li:last-child { border-bottom: none; }
   .highlight { color: var(--color-red); font-weight: 800; }
 
   /* Gallery Sections */
-  .gallery-wrapper { max-width: 1100px; margin: 60px auto 0; padding: 0 20px; text-align: center; }
-  .gallery-block { margin-bottom: 50px; }
+  .gallery-wrapper { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
+  .gallery-block {
+    padding: 35px 20px; margin-bottom: 60px;
+    border-top: 3px solid var(--color-red);
+  }
   .section-title { font-size: 42px; font-family: var(--font-heading); text-transform: uppercase; color: var(--color-red); letter-spacing: 2px; margin-bottom: 10px; }
-  .section-desc { font-size: 16px; color: var(--color-text-muted); font-style: italic; margin-bottom: 30px; }
+  .section-desc { font-size: 16px; color: #fff; font-style: italic; margin-bottom: 30px; }
   
   .slider-frame {
     position: relative; width: 100%; height: 500px; background: #000;
-    border: 3px solid #333; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 15px;
+    border: 2px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
   }
-  
   .slider-img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    transition: opacity 0.3s ease; 
-    filter: contrast(1.15) saturate(1.2) brightness(1.05); 
+    width: 100%; height: 100%; object-fit: cover; 
+    transition: opacity 0.4s ease, transform 0.4s ease; 
+    filter: contrast(1.15) saturate(1.2); 
   }
   
   .nav-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     background: rgba(0,0,0,0.7); color: #fff; border: 2px solid var(--color-red);
     width: 45px; height: 45px; border-radius: 50%; font-size: 20px;
-    cursor: pointer; z-index: 5; transition: background 0.2s;
+    cursor: pointer; z-index: 5; transition: all 0.2s;
     display: flex; align-items: center; justify-content: center;
   }
-  .nav-arrow:hover { background: var(--color-red); }
+  .nav-arrow:hover { background: var(--color-red); transform: translateY(-50%) scale(1.1); }
   .nav-arrow.prev { left: 15px; }
   .nav-arrow.next { right: 15px; }
 
   .thumbnail-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
   .thumb {
     width: 90px; height: 65px; object-fit: cover; border-radius: var(--radius-sm); cursor: pointer;
-    opacity: 0.5; border: 3px solid transparent; transition: all 0.2s;
+    opacity: 0.5; border: 2px solid transparent; transition: all 0.3s;
     filter: contrast(1.1) saturate(1.1);
   }
-  .thumb:hover, .thumb.active { opacity: 1; border-color: var(--color-red); }
+  .thumb:hover, .thumb.active { opacity: 1; border-color: var(--color-red); transform: scale(1.05); }
 
   /* Marquee Strip */
   .marquee-band {
-    background: var(--color-red); color: var(--color-text-main); padding: 12px 0;
-    margin: 50px 0; overflow: hidden; white-space: nowrap; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    background: rgba(226, 35, 26, 0.9); color: #fff; padding: 15px 0;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    overflow: hidden; white-space: nowrap; box-shadow: 0 5px 25px rgba(0,0,0,0.8);
   }
   .marquee-content {
     display: inline-block; animation: scroll-left 30s linear infinite;
-    font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px;
+    font-family: var(--font-heading); font-size: 22px; letter-spacing: 2px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
   }
   .marquee-content span { padding: 0 30px; }
   @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-  /* =========================================
-     7. STANDALONE PAYMENT SECTION
-     ========================================= */
-  .payment-section-standalone {
-    background: #111;
-    padding: 60px 20px;
-    text-align: center;
-    border-top: 3px solid var(--color-red);
-    margin-top: 40px;
-  }
-
-  /* =========================================
-     8. LOCATION SECTION
-     ========================================= */
-  .location-section {
-    background: #0a0a0a;
-    padding: 60px 20px;
-    text-align: center;
-    border-top: 3px solid var(--color-red);
-  }
-  .map-box {
-    max-width: 900px;
-    margin: 0 auto;
-    background: var(--color-bg-card);
-    padding: 20px;
-    border-radius: var(--radius-md);
-    border-bottom: 4px solid var(--color-red);
+  /* Buttons */
+  .button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+  .action-btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    height: 48px; padding: 0 30px; border: 2px solid transparent; border-radius: var(--radius-pill);
+    color: #fff; font-size: 15px; font-weight: 800; text-transform: uppercase; text-decoration: none;
+    cursor: pointer; overflow: hidden; transition: all 0.3s;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   }
-  .map-iframe-container {
-    width: 100%;
-    height: 350px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    border: 2px solid #333;
+  .action-btn span { position: relative; z-index: 2; text-shadow: 1px 1px 4px #000; }
+  .action-btn::before {
+    content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1; transition: background 0.3s;
   }
-  .map-iframe-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  .btn-map-large {
-    display: inline-block; background: var(--color-red); color: #fff; padding: 12px 30px;
-    text-decoration: none; font-weight: 900; font-size: 15px; border-radius: var(--radius-pill);
-    transition: all 0.3s; text-transform: uppercase;
-  }
-  .btn-map-large:hover { background: var(--color-red-dark); transform: scale(1.05); }
+  .action-btn:hover::before { background: rgba(0,0,0,0.3); }
+  .action-btn:hover { transform: translateY(-3px) scale(1.05); border-color: var(--color-red); box-shadow: 0 8px 25px rgba(226,35,26,0.4); }
 
-  /* =========================================
-     9. REVIEWS SECTION
-     ========================================= */
-  .reviews-area { background: #000; padding: 70px 20px; text-align: center; border-top: 3px solid var(--color-red); }
-  .reviews-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1100px; margin: 35px auto; }
+  /* Map & Reviews */
+  .map-box { max-width: 900px; margin: 0 auto; padding: 20px; border-bottom: 4px solid var(--color-red); }
+  .map-iframe-container { width: 100%; height: 350px; border-radius: 8px; overflow: hidden; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.1); }
+  .map-iframe-container iframe { width: 100%; height: 100%; border: none; }
   
-  .review-card {
-    background: var(--color-bg-card); padding: 25px; border-radius: var(--radius-md);
-    border-bottom: 4px solid var(--color-red); flex: 1 1 250px; max-width: 320px;
-    text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column;
+  .btn-map-large {
+    display: inline-block; background: var(--color-red); color: #fff; padding: 14px 35px;
+    text-decoration: none; font-weight: 900; font-size: 15px; border-radius: var(--radius-pill);
+    transition: all 0.3s; text-transform: uppercase; box-shadow: 0 5px 15px rgba(226,35,26,0.3);
   }
-  .stars { color: var(--color-red); font-size: 18px; letter-spacing: 2px; margin-bottom: 12px; }
-  .quote { font-size: 15px; line-height: 1.6; font-style: italic; color: var(--color-text-muted); margin-bottom: 20px; flex-grow: 1; }
+  .btn-map-large:hover { background: var(--color-red-dark); transform: translateY(-3px) scale(1.05); }
+
+  .reviews-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1100px; margin: 35px auto; }
+  .review-card {
+    padding: 30px; border-bottom: 4px solid var(--color-red); flex: 1 1 250px; max-width: 320px;
+    text-align: left; display: flex; flex-direction: column; transition: transform 0.3s;
+  }
+  .review-card:hover { transform: translateY(-10px); }
+  .stars { color: var(--color-red); font-size: 20px; letter-spacing: 2px; margin-bottom: 12px; }
+  .quote { font-size: 15px; line-height: 1.6; font-style: italic; color: #eee; margin-bottom: 20px; flex-grow: 1; }
   .reviewer { font-weight: 900; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; gap: 8px; }
   .reviewer::before { content: ''; display: block; width: 20px; height: 3px; background: var(--color-red); }
 
-  .btn-reviews {
-    display: inline-block; background: var(--color-red); color: #fff; padding: 14px 30px;
-    text-decoration: none; font-weight: 900; font-size: 15px; border-radius: var(--radius-pill);
-    transition: all 0.3s; text-transform: uppercase; margin-top: 20px;
-  }
-  .btn-reviews:hover { background: var(--color-red-dark); transform: scale(1.05); }
-
   /* =========================================
-     10. FACEBOOK BROWSER FIX NOTICE STYLES
+     6. PAYMENT MODAL
      ========================================= */
-  #facebookBrowserNotice {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0, 0, 0, 0.92);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000; display: none;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
-
-  .fb-notice-box {
-    width: 100%;
-    max-width: 420px;
-    background: #151515;
-    border: 1px solid #333;
-    border-top: 4px solid #e2231a;
-    border-radius: 16px;
-    padding: 28px 22px;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  .payment-modal-card {
+    background: rgba(30, 30, 30, 0.95); border: 2px solid var(--color-red);
+    border-radius: var(--radius-md); padding: 30px; width: 100%; max-width: 650px;
+    position: relative; box-shadow: 0 10px 40px rgba(226,35,26,0.5);
   }
-
-  .fb-notice-box h2 {
-    margin: 0 0 12px;
-    font-size: 24px;
+  .modal-close {
+    position: absolute; top: 15px; right: 20px; background: none; border: none;
+    color: #888; font-size: 26px; cursor: pointer; transition: color 0.2s; padding: 0;
   }
-
-  .fb-notice-box p {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-
-  .fb-steps {
-    text-align: left;
-    background: #0d0d0d;
-    border-radius: 9px;
-    padding: 14px 18px;
-    margin-bottom: 18px;
-    color: #ccc;
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  .fb-browser-btn,
-  .fb-copy-btn {
-    width: 100%;
-    padding: 13px;
-    margin-top: 8px;
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  .fb-browser-btn {
-    border: 0;
-    background: #e2231a;
-    color: white;
-  }
-
-  .fb-copy-btn {
-    border: 1px solid #444;
-    background: #222;
-    color: white;
-  }
-
-  .fb-close-btn {
-    margin-top: 15px;
-    background: none;
-    border: 0;
-    color: #777;
-    cursor: pointer;
-    font-size: 13px;
-  }
+  .modal-close:hover { color: var(--color-red); }
+  .payment-modal-card h2 { text-align: center; font-family: var(--font-heading); font-size: 28px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; }
+  .payment-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media(min-width: 600px) { .payment-grid { grid-template-columns: 1fr 1fr; } }
+  .payment-method-box { background: #111; border: 1px solid #333; border-radius: var(--radius-md); padding: 20px; text-align: center; display: flex; flex-direction: column; }
+  .payment-method-box h3 { color: var(--color-red); font-family: var(--font-heading); font-size: 22px; margin-bottom: 15px; }
+  .payment-method-box p { font-size: 13px; font-weight: 700; color: var(--color-text-muted); margin-bottom: 8px; text-align: left; }
+  .copy-group { display: flex; gap: 8px; margin-bottom: 15px; }
+  .copy-group input { flex: 1; padding: 10px; background: #000; border: 1px solid #444; border-radius: var(--radius-sm); color: #fff; font-size: 16px; font-weight: 800; text-align: center; width: 100%; }
+  .copy-group button { padding: 0 15px; background: #333; color: #fff; border: 1px solid #555; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; transition: background 0.2s; }
+  .copy-group button:hover { background: #555; }
+  .launch-app-btn { width: 100%; padding: 12px; background: var(--color-red); color: #fff; border: none; border-radius: var(--radius-pill); font-size: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: transform 0.2s, background 0.2s; margin-top: auto; text-decoration: none;}
+  .launch-app-btn:hover { background: var(--color-red-dark); transform: translateY(-2px); }
+  .feedback-msg { color: #4CAF50; font-size: 13px; font-weight: 800; min-height: 18px; margin-top: 10px; }
 
   /* =========================================
-     11. RESPONSIVE QUERIES & ALIGNMENTS
+     7. FACEBOOK BROWSER FIX NOTICE
+     ========================================= */
+  #facebookBrowserNotice { display: none; position: fixed; inset: 0; z-index: 99999; background: rgba(0, 0, 0, 0.92); align-items: center; justify-content: center; padding: 20px; font-family: Arial, sans-serif; }
+  .fb-notice-box { width: 100%; max-width: 420px; background: #151515; border: 1px solid #333; border-top: 4px solid #e2231a; border-radius: 16px; padding: 28px 22px; text-align: center; color: #fff; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+  .fb-notice-box h2 { margin: 0 0 12px; font-size: 24px; }
+  .fb-notice-box p { color: #aaa; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+  .fb-steps { text-align: left; background: #0d0d0d; border-radius: 9px; padding: 14px 18px; margin-bottom: 18px; color: #ccc; font-size: 13px; line-height: 1.8; }
+  .fb-browser-btn, .fb-copy-btn { width: 100%; padding: 13px; margin-top: 8px; border-radius: 9px; font-size: 14px; font-weight: bold; cursor: pointer; }
+  .fb-browser-btn { border: 0; background: #e2231a; color: white; }
+  .fb-copy-btn { border: 1px solid #444; background: #222; color: white; }
+  .fb-close-btn { margin-top: 15px; background: none; border: 0; color: #777; cursor: pointer; font-size: 13px; }
+
+  /* =========================================
+     8. RESPONSIVE QUERIES
      ========================================= */
   @media (max-width: 860px) {
-    /* Ensures Logo stays left, Call button stays right on mobile */
     .topbar-wrap { justify-content: space-between; }
     .header-left { order: 1; }
     .call-btn { order: 2; }
-    .nav-links { 
-      order: 3; 
-      width: 100%; 
-      justify-content: center; 
-      flex-wrap: wrap; 
-      gap: 15px; 
-      border-top: 1px solid #333; 
-      padding-top: 10px;
-    }
+    .nav-links { order: 3; width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
   }
-
   @media (max-width: 768px) {
     .slider-frame { height: 350px; }
     .section-title { font-size: 32px; }
@@ -464,28 +350,22 @@
 </head>
 <body>
 
+<!-- FACEBOOK IN-APP BROWSER FIX POPUP -->
 <div id="facebookBrowserNotice">
   <div class="fb-notice-box">
     <h2>Open in Browser</h2>
-    <p>
-      For the best experience, please open Super Gym in your browser.
-    </p>
+    <p>For the best experience, please open Super Gym in your browser.</p>
     <div class="fb-steps" id="fbSteps">
       <strong>Open this website in your browser</strong><br>
       Tap the <b>•••</b> menu at the top/bottom of your screen and choose <b>Open in Browser</b> or <b>Open in Safari</b>.
     </div>
-    <button class="fb-browser-btn" onclick="openExternalBrowser()">
-      Open in Browser
-    </button>
-    <button class="fb-copy-btn" onclick="copyWebsiteLink()">
-      Copy Website Link
-    </button>
-    <button class="fb-close-btn" onclick="closeFacebookNotice()">
-      Continue Anyway
-    </button>
+    <button class="fb-browser-btn" onclick="openExternalBrowser()">Open in Browser</button>
+    <button class="fb-copy-btn" onclick="copyWebsiteLink()">Copy Website Link</button>
+    <button class="fb-close-btn" onclick="closeFacebookNotice()">Continue Anyway</button>
   </div>
 </div>
 
+<!-- NAVIGATION -->
 <nav class="topbar">
   <div class="topbar-wrap">
     <div class="header-left" onclick="scrollToHome()">
@@ -507,8 +387,9 @@
   </div>
 </nav>
 
+<!-- HERO SECTION (Video only plays here) -->
 <header class="hero">
-  <video class="hero-video" autoplay loop muted playsinline poster="786287427_1077817244732657_8620509967219618674_n.jpg">
+  <video class="hero-video" autoplay loop muted playsinline>
     <source src="gym-video.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -526,8 +407,9 @@
   </div>
 </header>
 
-<section class="info-band">
-  <div class="schedule-card">
+<!-- SCHEDULE INFO -->
+<section class="glass-section info-band">
+  <div class="glass-card schedule-card animate-on-scroll">
     <h3>The Grind Doesn't Stop</h3>
     <ul>
       <li><span>Everyday:</span> <span class="highlight">Open 24 Hours</span></li>
@@ -537,9 +419,11 @@
   </div>
 </section>
 
+<!-- GALLERIES -->
 <section class="gallery-wrapper">
   
-  <div class="gallery-block" id="main-gym">
+  <!-- MEN'S GALLERY -->
+  <div class="glass-card gallery-block animate-on-scroll" id="main-gym">
     <h2 class="section-title">The Main Floor</h2>
     <p class="section-desc">Free weights, plate-loaded machines, and enough iron to keep you busy for years.</p>
     <div class="slider-frame">
@@ -552,6 +436,7 @@
 
 </section>
 
+<!-- MARQUEE DIVIDER -->
 <div class="marquee-band">
   <div class="marquee-content">
     <span>WORKING 24 HOURS   •   READY FOR YOUR GOALS   •   WITH BEST COACHES   •   WITH BEST MACHINES</span>
@@ -561,7 +446,8 @@
 
 <section class="gallery-wrapper" style="margin-top: 0;">
 
-  <div class="gallery-block" id="womens-gym">
+  <!-- LADIES GALLERY -->
+  <div class="glass-card gallery-block animate-on-scroll" id="womens-gym">
     <h2 class="section-title">Ladies</h2>
     <p class="section-desc">A dedicated training floor for our ladies — cardio, strength machines, and a space built just for them.</p>
     <div class="slider-frame">
@@ -572,7 +458,8 @@
     <div class="thumbnail-row" id="womenThumbs"></div>
   </div>
 
-  <div class="gallery-block" id="mma-gym">
+  <!-- MMA & FITNESS GALLERY -->
+  <div class="glass-card gallery-block animate-on-scroll" id="mma-gym">
     <h2 class="section-title">MMA & Fitness</h2>
     <p class="section-desc">A dedicated space for martial arts, grappling, and functional fitness training.</p>
     <div class="slider-frame">
@@ -583,7 +470,8 @@
     <div class="thumbnail-row" id="mmaThumbs"></div>
   </div>
 
-  <div class="gallery-block" id="locker-room">
+  <!-- LOCKER ROOM GALLERY -->
+  <div class="glass-card gallery-block animate-on-scroll" id="locker-room">
     <h2 class="section-title">Locker Rooms & Facilities</h2>
     <p class="section-desc">Secure lockers, clean changing areas, and fresh shower facilities available for all members.</p>
     <div class="slider-frame">
@@ -596,163 +484,145 @@
 
 </section>
 
-<section class="payment-section-standalone" id="payment-section">
-  <h2 class="section-title">Pay Now</h2>
-  <p class="section-desc">Pay your membership instantly and start improving.</p>
-  
-  <div class="button-group">
-    <button class="action-btn btn-instapay" onclick="openPaymentModal()" style="background-image: url('images.jpg'); background-size: cover; background-position: center;">
-      <span>InstaPay</span>
-    </button>
-    <button class="action-btn btn-vodafone" onclick="openPaymentModal()" style="background-image: url('da825f86efb52423c2785be6a2dd9124.jpg'); background-size: cover; background-position: center;">
-      <span>Vodafone Cash</span>
-    </button>
-  </div>
-</section>
-
-<section class="location-section" id="location-section">
-  <h2 class="section-title">Find Us</h2>
-  <p class="section-desc">Come visit Super Gym and start your journey today.</p>
-  
-  <div class="map-box">
-    <div class="map-iframe-container">
-      <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.355325754406!2d30.00405337537667!3d31.250688474338426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5dbc333322b85%3A0x9a50357b93f536cc!2ssuper%20gym!5e0!3m2!1sen!2seg!4v1700000000000!5m2!1sen!2seg" 
-        loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
+<!-- STANDALONE PAYMENT SECTION -->
+<section class="glass-section" id="payment-section">
+  <div class="animate-on-scroll">
+    <h2 class="section-title">Pay Now</h2>
+    <p class="section-desc">Pay your membership instantly and start improving.</p>
+    
+    <div class="button-group">
+      <button class="action-btn" onclick="openPaymentModal()" style="background-image: url('images.jpg'); background-size: cover; background-position: center;">
+        <span>InstaPay</span>
+      </button>
+      <button class="action-btn" onclick="openPaymentModal()" style="background-image: url('da825f86efb52423c2785be6a2dd9124.jpg'); background-size: cover; background-position: center;">
+        <span>Vodafone Cash</span>
+      </button>
     </div>
-    <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="btn-map-large">
-      📍 Open in Google Maps
-    </a>
   </div>
 </section>
 
-<section class="reviews-area" id="reviews">
-  <h2 class="section-title" style="font-size: 32px;">Iron Sharpens Iron</h2>
-  <p class="section-desc" style="color: #999;">See what our community of champions has to say.</p>
+<!-- LOCATION SECTION -->
+<section class="glass-section" id="location-section">
+  <div class="animate-on-scroll">
+    <h2 class="section-title">Find Us</h2>
+    <p class="section-desc">Come visit Super Gym and start your journey today.</p>
+    
+    <div class="glass-card map-box">
+      <div class="map-iframe-container">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.355325754406!2d30.00405337537667!3d31.250688474338426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5dbc333322b85%3A0x9a50357b93f536cc!2ssuper%20gym!5e0!3m2!1sen!2seg!4v1700000000000!5m2!1sen!2seg" 
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <a href="https://maps.app.goo.gl/K9ZAMdGKQtU3ogDfA" target="_blank" class="btn-map-large">
+        📍 Open in Google Maps
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="glass-section" id="reviews">
+  <h2 class="section-title animate-on-scroll" style="font-size: 32px;">Iron Sharpens Iron</h2>
+  <p class="section-desc animate-on-scroll">See what our community of champions has to say.</p>
 
   <div class="reviews-grid">
-    <div class="review-card">
+    <div class="glass-card review-card animate-on-scroll">
       <div class="stars">★★★★★</div>
       <div class="quote">"The absolute best gym in the area. Top-tier equipment, always perfectly clean, and the coaching staff actually cares about your progress."</div>
       <div class="reviewer">Omar Hassan</div>
     </div>
-    <div class="review-card">
+    <div class="glass-card review-card animate-on-scroll">
       <div class="stars">★★★★★</div>
       <div class="quote">"Being open 24 hours is a massive plus for my schedule. The machines are incredibly smooth and well-maintained."</div>
       <div class="reviewer">Kareem Ali</div>
     </div>
-    <div class="review-card">
+    <div class="glass-card review-card animate-on-scroll">
       <div class="stars">★★★★★</div>
       <div class="quote">"Great community, heavy weights, and intense vibes. You walk in and instantly want to work hard."</div>
       <div class="reviewer">Ahmed Tarek</div>
     </div>
-    <div class="review-card">
+    <div class="glass-card review-card animate-on-scroll">
       <div class="stars">★★★★★</div>
       <div class="quote">"Hands down the cleanest gym I've ever been to. The atmosphere is purely motivational."</div>
       <div class="reviewer">Mohamed Saeed</div>
     </div>
   </div>
 
-  <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-reviews">⭐ Read More on Google</a>
+  <a href="https://www.google.com/maps/place/super+gym/@31.2506931,30.0040534,17z/data=!4m16!1m7!3m6!1s0x14f5dbc333322b85:0x9a50357b93f536cc!2ssuper+gym!8m2!3d31.2506885!4d30.0066283!16s%2Fg%2F11mqw11flz!3m7!1s0x14f5dbc333322b85:0x9a50357b93f536cc!8m2!3d31.2506885!4d30.0066283!9m1!1b1!16s%2Fg%2F11mqw11flz?authuser=0&entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-map-large animate-on-scroll">⭐ Read More on Google</a>
 </section>
 
+<!-- PAYMENT MODAL -->
 <div id="paymentModal" class="modal-overlay">
   <div class="payment-modal-card">
-
     <button class="modal-close" onclick="closePaymentModal()">✕</button>
-
     <h2>Choose Payment Method</h2>
-
     <div class="payment-grid">
-
+      <!-- InstaPay -->
       <div class="payment-method-box" style="display: flex; align-items: center; justify-content: center; padding: 0; border: none; background: transparent;">
-
-        <a
-          href="https://ipn.eg/S/alighareeb170/instapay/7wP35x"
-          class="launch-app-btn"
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 25px; margin: 0; width: auto; font-size: 13px; outline: none;"
-          target="_blank"
-          rel="noopener">
+        <a href="https://ipn.eg/S/alighareeb170/instapay/7wP35x" class="launch-app-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 25px; margin: 0; width: auto; font-size: 13px; outline: none;" target="_blank" rel="noopener">
           <img src="images.jpg" alt="InstaPay" style="width: 35px; height: 35px; border-radius: 8px;">
           Pay with InstaPay
         </a>
-
       </div>
-
+      <!-- Vodafone Cash -->
       <div class="payment-method-box">
-
         <h3>Vodafone Cash</h3>
-
         <p>Transfer to this number:</p>
-
         <div class="copy-group">
-          <input
-            type="text"
-            id="vodafoneNumber"
-            value="01150474167"
-            readonly
-          >
-
-          <button onclick="copyPaymentNumber('vodafoneNumber','vodafoneMessage')">
-            Copy
-          </button>
+          <input type="text" id="vodafoneNumber" value="01150474167" readonly>
+          <button onclick="copyPaymentNumber('vodafoneNumber','vodafoneMessage')">Copy</button>
         </div>
-
         <p id="vodafoneMessage" class="feedback-msg"></p>
-
-        <button
-          class="launch-app-btn"
-          onclick="openAnaVodafone()">
-          Open Vodafone Cash
-        </button>
-
+        <button class="launch-app-btn" onclick="openAnaVodafone()">Open Vodafone Cash</button>
       </div>
-
     </div>
-
-    <p style="
-      text-align:center;
-      color:#999;
-      font-size:12px;
-      margin-top:20px;
-      line-height:1.6;
-    ">
-      After copying the number, open your payment app,
-      paste the number, enter the amount, and complete the payment.
+    <p style="text-align:center; color:#999; font-size:12px; margin-top:20px; line-height:1.6;">
+      After copying the number, open your payment app, paste the number, enter the amount, and complete the payment.
     </p>
-
   </div>
 </div> 
 
+<!-- =========================================
+     JAVASCRIPT LOGIC
+     ========================================= -->
 <script>
-  /* --- SMOOTH SCROLL TO HOME --- */
-  function scrollToHome() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  /* --- 1. SCROLL ANIMATIONS --- */
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
     });
+  });
+
+  /* --- 2. SMOOTH SCROLL TO HOME --- */
+  function scrollToHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  /* --- 1. MODAL CONTROLS --- */
+  /* --- 3. MODAL CONTROLS --- */
   const modal = document.getElementById('paymentModal');
-
   function openPaymentModal() {
     modal.style.display = 'flex';
     document.getElementById("vodafoneMessage").innerText = "";
   }
-
   function closePaymentModal() {
     modal.style.display = 'none';
   }
-
   window.onclick = function(event) {
     if (event.target === modal) {
       closePaymentModal();
     }
   };
 
-  /* --- 2. PAYMENT & COPY LOGIC --- */
+  /* --- 4. PAYMENT & COPY LOGIC --- */
   function copyPaymentNumber(inputId, messageId) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(messageId);
@@ -762,13 +632,9 @@
       navigator.clipboard.writeText(number)
         .then(() => {
           message.innerText = "Number copied successfully! ✅";
-          setTimeout(() => {
-            message.innerText = "";
-          }, 3000);
+          setTimeout(() => { message.innerText = ""; }, 3000);
         })
-        .catch(() => {
-          fallbackCopy(input, message);
-        });
+        .catch(() => { fallbackCopy(input, message); });
     } else {
       fallbackCopy(input, message);
     }
@@ -778,24 +644,17 @@
     input.focus();
     input.select();
     input.setSelectionRange(0, 99999);
-
     try {
       document.execCommand("copy");
       message.innerText = "Number copied successfully! ✅";
-      setTimeout(() => {
-        message.innerText = "";
-      }, 3000);
+      setTimeout(() => { message.innerText = ""; }, 3000);
     } catch (error) {
-      alert(
-        "Please copy this number manually:\n" +
-        input.value
-      );
+      alert("Please copy this number manually:\n" + input.value);
     }
   }
 
   async function openAnaVodafone() {
     const number = "01150474167";
-
     try {
       await navigator.clipboard.writeText(number);
     } catch (error) {
@@ -821,22 +680,7 @@
     }
   }
 
-  function copyInstaPayNumber() {
-    const number = "01150474167";
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(number);
-    } else {
-        const input = document.createElement("input");
-        input.value = number;
-        document.body.appendChild(input);
-        input.select();
-        input.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        document.body.removeChild(input);
-    }
-  }
-
-  /* --- 3. GALLERY DATA & CONTROLS --- */
+  /* --- 5. GALLERY DATA & CONTROLS --- */
   const galleries = {
     men: {
       index: 0,
@@ -863,7 +707,7 @@
       photos: [
         '786287427_1077817244732657_8620509967219618674_n.jpg',
         '786467486_955554297566914_6133845927288105462_n.jpg',
-        '784249656_2458167258026588_8189363751514977886_n_2.jpg'
+        '784249656_2458167258026588_8189363751514977886_n.jpg'
       ]
     },
     locker: {
@@ -906,18 +750,21 @@
     const mainImg = document.getElementById(`${type}MainImg`);
     const thumbs = document.getElementById(`${type}Thumbs`).querySelectorAll('.thumb');
     
-    mainImg.style.opacity = 0.5;
+    mainImg.style.transform = "scale(0.98)";
+    mainImg.style.opacity = 0.4;
+    
     setTimeout(() => {
       mainImg.src = galleries[type].photos[newIndex];
+      mainImg.style.transform = "scale(1)";
       mainImg.style.opacity = 1;
-    }, 150);
+    }, 200);
 
     thumbs.forEach((t, i) => {
       t.classList.toggle('active', i === newIndex);
     });
   }
 
-  /* --- 4. NEW FACEBOOK BROWSER DETECTOR & OVERRIDE LOGIC --- */
+  /* --- 6. FACEBOOK BROWSER DETECTOR & OVERRIDE LOGIC --- */
   (function () {
     const ua = navigator.userAgent || "";
     const isFacebook = /FBAN|FBAV|FB_IAB|FB4A|FBIOS|FBSS|Messenger/i.test(ua);
@@ -926,37 +773,24 @@
 
     window.addEventListener("load", function () {
         const notice = document.getElementById("facebookBrowserNotice");
-        if (notice) {
-            notice.style.display = "flex";
-        }
+        if (notice) { notice.style.display = "flex"; }
     });
   })();
 
   function openExternalBrowser() {
     const url = window.location.href;
-    // Try to open the page outside Facebook
     const newWindow = window.open(url, "_blank");
-
-    // Facebook may block the request
     if (!newWindow) {
-        alert(
-            "Please tap the ••• menu in Facebook and choose " +
-            "'Open in Browser'."
-        );
+        alert("Please tap the ••• menu in Facebook and choose 'Open in Browser'.");
     }
   }
 
   function copyWebsiteLink() {
     const url = window.location.href;
-
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url)
-            .then(() => {
-                alert("Website link copied successfully!");
-            })
-            .catch(() => {
-                alert("Copy this link manually:\n" + url);
-            });
+            .then(() => { alert("Website link copied successfully!"); })
+            .catch(() => { alert("Copy this link manually:\n" + url); });
     } else {
         alert("Copy this link manually:\n" + url);
     }
