@@ -76,7 +76,8 @@
   /* ==========================================================================
      3. TAB SYSTEM & ANIMATIONS
      ========================================================================== */
-  .tab-content { display: block; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
   
   .tab-animate-item { opacity: 0; }
   @keyframes tabElementFadeIn {
@@ -89,6 +90,43 @@
     100% { opacity: 1; transform: scale(1); }
   }
 
+  /* ==========================================================================
+     4. NAVIGATION BAR
+     ========================================================================== */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border); box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  }
+  .topbar-wrap {
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 15px 25px; max-width: var(--max-width); margin: 0 auto; flex-wrap: wrap; gap: 15px;
+  }
+  .header-left { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+  .logo { font-family: var(--font-heading); font-size: 28px; letter-spacing: 1px; }
+  .logo span { color: var(--red-primary); }
+  .nav-logo-img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--red-primary); }
+  
+  .nav-links { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .nav-links button {
+    background: none; border: none; color: var(--text-main); font-family: var(--font-body);
+    font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; 
+    cursor: pointer; padding: 5px 0; position: relative; transition: color 0.3s ease; 
+  }
+  .nav-links button::after {
+    content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px;
+    background: var(--red-primary); transition: width 0.3s ease;
+  }
+  .nav-links button:hover, .nav-links button.active-link { color: var(--red-primary); }
+  .nav-links button.active-link::after { width: 100%; }
+
+  .call-btn {
+    display: flex; align-items: center; gap: 8px; background: var(--red-primary); color: #fff; 
+    font-weight: 800; padding: 10px 24px; border-radius: var(--radius-pill); 
+    text-transform: uppercase; text-decoration: none; font-size: 14px; letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+  .call-btn:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(179,18,18,0.4); }
 
   /* ==========================================================================
      5. HERO SECTION (HOME TAB)
@@ -222,6 +260,8 @@
   @media (max-width: 768px) {
     .collage-container { height: auto; display: flex; flex-direction: column; gap: 20px; perspective: none; }
     .collage-img { position: relative !important; width: 100% !important; height: 250px !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; transform: none !important; filter: brightness(1) !important; border: 1px solid var(--glass-border); }
+    .nav-links { width: 100%; border-top: 1px solid var(--glass-border); padding-top: 15px; margin-top: 5px; justify-content: center; }
+    .header-left { margin-bottom: 5px; }
   }
 </style>
 </head>
@@ -229,6 +269,25 @@
 
 <div class="global-bg-logo"></div>
 
+<!-- NAVIGATION BAR -->
+<nav class="topbar">
+  <div class="topbar-wrap">
+    <div class="header-left" onclick="openTab('tab-home')">
+      <img src="449780329_498191029456173_7730127466427361362_n.jpg" alt="Super Gym Logo" class="nav-logo-img">
+      <div class="logo">SUPER<span>GYM</span></div>
+    </div>
+    <div class="nav-links">
+      <button onclick="openTab('tab-home')" class="nav-btn active-link" data-target="tab-home">Home</button>
+      <button onclick="openTab('tab-main-gym')" class="nav-btn" data-target="tab-main-gym">Main Gym</button>
+      <button onclick="openTab('tab-womens-gym')" class="nav-btn" data-target="tab-womens-gym">Ladies</button>
+      <button onclick="openTab('tab-mma-gym')" class="nav-btn" data-target="tab-mma-gym">MMA & Fitness</button>
+      <button onclick="openTab('tab-locker-room')" class="nav-btn" data-target="tab-locker-room">Locker</button>
+      <button onclick="openTab('tab-social')" class="nav-btn" data-target="tab-social">Social</button>
+      <button onclick="openTab('tab-location')" class="nav-btn" data-target="tab-location">Find Us</button>
+    </div>
+    <a href="tel:01019156087" class="call-btn"><i class="fas fa-phone-alt"></i> Call Now</a>
+  </div>
+</nav>
 
 <main id="main-container">
 
@@ -503,6 +562,33 @@
      JAVASCRIPT LOGIC
      ========================================================================== -->
 <script>
+  /* --- TAB SYSTEM LOGIC (SPA) --- */
+  function openTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => { tab.classList.remove('active'); });
+    document.querySelectorAll('.nav-links button').forEach(btn => { btn.classList.remove('active-link'); });
+
+    const activeTab = document.getElementById(tabId);
+    activeTab.classList.add('active');
+    
+    const activeBtn = document.querySelector(`.nav-links button[data-target="${tabId}"]`);
+    if(activeBtn) activeBtn.classList.add('active-link');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const animatedElements = activeTab.querySelectorAll('.tab-animate-item');
+    animatedElements.forEach((el, index) => {
+      el.style.animation = 'none'; el.offsetHeight; 
+      el.style.animation = `tabElementFadeIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) ${index * 0.1}s forwards`;
+    });
+
+    if(tabId === 'tab-home') {
+      const heroVideo = document.querySelector('.hero-video');
+      if (heroVideo && heroVideo.paused) heroVideo.play().catch(() => {});
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => { openTab('tab-home'); });
+
   /* --- 3D ROTATING CAROUSEL LOGIC --- */
   document.querySelectorAll('.collage-container').forEach(container => {
     const images = Array.from(container.querySelectorAll('.collage-img'));
